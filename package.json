@@ -1,23 +1,24 @@
 {
-  "name": "stockportfolioapp",
-  "version": "1.0.0",
-  "description": "Application that allows users to track stocks",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "startbootstrap-sb-admin-2",
+  "title": "SB Admin 2",
+  "version": "3.3.7+1",
+  "homepage": "http://startbootstrap.com/template-overviews/sb-admin-2",
+  "author": "Start Bootstrap",
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.10",
+    "gulp-header": "^1.8.7",
+    "gulp-less": "^3.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.4"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarkoNogic1/stockPortfolioApp.git"
-  },
-  "author": "Marko Nogic",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MarkoNogic1/stockPortfolioApp/issues"
-  },
-  "homepage": "https://github.com/MarkoNogic1/stockPortfolioApp#readme",
-  "dependencies": {
-    "ejs": "^2.5.7",
-    "express": "^4.16.2"
+    "url": "git://github.com/BlackrockDigital/startbootstrap-sb-admin-2.git"
   }
 }
