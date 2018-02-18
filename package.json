@@ -1,0 +1,23 @@
+{
+  "name": "stockportfolioapp",
+  "version": "1.0.0",
+  "description": "Application that allows users to track stocks",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarkoNogic1/stockPortfolioApp.git"
+  },
+  "author": "Marko Nogic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarkoNogic1/stockPortfolioApp/issues"
+  },
+  "homepage": "https://github.com/MarkoNogic1/stockPortfolioApp#readme",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}
