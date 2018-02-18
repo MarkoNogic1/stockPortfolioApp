@@ -6,7 +6,7 @@ How to start the web application:
 2. Open a terminal/cmd, and cd to the directory you would like the project to be in.
 3. Clone the github project with the command "git clone https://github.com/MarkoNogic1/stockPortfolioApp.git"
 4. Move into the newly created "stockPortfolioApp" folder.
---- You need to have Node correctly installed for the following steps to work ---
+*NOTE: You need to have Node correctly installed for the following steps to work*
 5. Run the command "npm install". This will install the dependencies of the project.
 6. Finally, run the command "node app.js". Afterwards, you should see "Server has started!" in your terminal/cmd, which confirms the application is running on your localhost (port 3000).
 [Go to your favorite web browser and navigate to http://localhost:3000]
