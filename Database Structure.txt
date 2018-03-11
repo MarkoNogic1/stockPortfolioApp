@@ -1,6 +1,0 @@
-This is a collection of my ideas for ways to structure our database for holding user information. 
-
-Table USERINFO
-UserID, Username, Password*, UserEmail
-*password should ideally be stored sepratly in an encripted and protected file. 
-
