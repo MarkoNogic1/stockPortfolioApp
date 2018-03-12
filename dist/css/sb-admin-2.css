@@ -395,6 +395,10 @@ table.dataTable thead .sorting:after {
   margin-top: 0;
   color: inherit;
 }
+.modal-backdrop.fade.in{
+  opacity: 0;
+  z-index: -1;
+}
 .timeline-body > p,
 .timeline-body > ul {
   margin-bottom: 0;
