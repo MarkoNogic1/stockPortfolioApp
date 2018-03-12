@@ -169,6 +169,9 @@ body {
 .login-panel {
   margin-top: 25%;
 }
+.register-panel {
+  margin-top: 5%;
+}
 .flot-chart {
   display: block;
   height: 400px;
