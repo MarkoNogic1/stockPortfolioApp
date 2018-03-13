@@ -19,8 +19,8 @@
 //thus would be perfectly updated when you hit "submit"
 
 // == REQUIRED MODULES ==
-var mysql = require('mysql');
-var encrypt = require('bcrypt');
+//var mysql = require('mysql');
+//var encrypt = require('bcrypt');
 
 var user;
 var email;
@@ -95,13 +95,14 @@ function submit()
     if (valid)
     {
         //database_entry will do its thing and also return true or false, so we can see if this went funny.
-        success = database_entry()
-    }
-
-    if (success)
-    {
+        //success = database_entry()
         window.location="login.html";
     }
+
+    //if (success)
+    //{
+        //window.location="login.html";
+    //}
 
 }
 
@@ -138,6 +139,9 @@ function form_error_clear()
     document.getElementById("fname_error").style.visibility="hidden";
     document.getElementById("lname_error").style.visibility="hidden";
 }
+
+/*
+This needs to be put into app.js, NOT the clientside js file.
 
 function database_entry()
 {
@@ -198,4 +202,4 @@ function database_entry()
     {
         return false;
     }
-}
+}*/

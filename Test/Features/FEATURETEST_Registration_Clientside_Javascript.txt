@@ -1,0 +1,46 @@
+REGISTRATION PAGE CLIENTSIDE JAVASCRIPT TESTS
+
+#1 -
+	Given that the entry in the username field is empty,
+	When the submit function is invoked,
+	Then the submission will be considered invalid and will display an error unique to username.
+
+#2 -
+	Given that the entry in the email field is empty,
+	When the submit function is invoked,
+	Then the submission will be considered invalid and will display an error unique to email.
+
+#3 -
+	Given that either the last name field or first name field are empty,
+	When the submit function is invoked,
+	Then the submission will be considered invalid and will display an error for both first name and last name.
+
+#4 -
+	Given that either the password field or re-type password field are empty,
+	When the submit function is invoked,
+	Then the submission will be considered invalid and will display an error for both password and re-type password.
+
+#5 -
+	Given that both the password field and re-type password field both have strings of size greater than 0 but do not match,
+	When the submit function is invoked,
+	Then the submission will be considered invalid and will display an error for both password and re-type password.
+
+#6 -
+	Given that username, email, first name, last name, password and re-type password fields all have strings with size >0 and password and re-type password match
+	When the submit function is invoked,
+	The the submission will be considered valid and the page will re-direct to the log in page.
+
+#7 -
+	Given that an attempt to invoke submission was made but errors appeared and the entries in the fields have since been corrected to match criteria in test #6
+	When the submit function is invoked,
+	The the submission will be considered valid and the page will re-direct to the log in page.
+
+#8 -
+	Given that an attempt to invoke submission was made but errors appeared and some but not all of the errorneous fields have since been corrected
+	When the submit function is invoked,
+	The the submission will be considered invalid, and the fields that previously had errors but are corrected will remove their error warnings.
+
+#9 -
+	Given the log in page
+	When the method of reaching the Registration Page is invoked
+	The page will redirect to the Registration Page
