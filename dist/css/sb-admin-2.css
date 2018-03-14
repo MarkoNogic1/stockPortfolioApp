@@ -169,6 +169,9 @@ body {
 .login-panel {
   margin-top: 25%;
 }
+.register-panel {
+  margin-top: 5%;
+}
 .flot-chart {
   display: block;
   height: 400px;
@@ -394,6 +397,10 @@ table.dataTable thead .sorting:after {
 .timeline-title {
   margin-top: 0;
   color: inherit;
+}
+.modal-backdrop.fade.in{
+  opacity: 0;
+  z-index: -1;
 }
 .timeline-body > p,
 .timeline-body > ul {
