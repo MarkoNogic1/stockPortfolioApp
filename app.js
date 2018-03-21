@@ -7,6 +7,10 @@ app.get("/", function(req,res){
     res.render("login.ejs");
 });
 
+app.get("/editPortfolio", function(req,res){
+    res.render("editPortfolio.ejs");
+});
+
 app.listen(3000, function () {
     console.log('Stock application is listening on port 3000.');
 });
