@@ -50,6 +50,16 @@ function submit()
         form_entry_error(1, 0, 0, 0);
         valid = false;
     }
+	var splChars = "*|,\":<>[]{}`\';()&$#%";
+		for (var i = 0; i < user.length; i++) 
+		{
+			if (splChars.indexOf(user.charAt(i)) != -1)
+			{
+				alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%"); 
+				form_entry_error(1, 0, 0, 0);
+				valid = false;
+			}
+		}
 
     if (email === null || email === "" || !email.includes("@") || !email.includes("."))
     {
