@@ -15,6 +15,10 @@ app.get("/editPortfolio", function(req,res){
     res.render("editPortfolio.ejs");
 });
 
+app.get("/editUserInfo", function(req,res){
+    res.render("editUserInfo.ejs");
+});
+
 app.get("/viewStock", function(req,res){
     res.render("viewStock.ejs");
 });
