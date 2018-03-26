@@ -2,12 +2,13 @@ var TimeSeriesEnum = {
     INTRADAY: 1,
     DAILY: 2,
     WEEKLY: 3,
-    MONTHLY: 4
+    MONTHLY: 4,
+    BATCH: 5
 };
 
 const API_KEY = "YGFY7TCSV5V6I7JN";
 
-function requestStockData(stockToken, timeSeries){
+function requestStockData(stockTokens, timeSeries){
     var timeSeriesToken;
     switch (timeSeries) {
         case TimeSeriesEnum.DAILY:
@@ -22,13 +23,27 @@ function requestStockData(stockToken, timeSeries){
         case TimeSeriesEnum.WEEKLY:
             timeSeriesToken = "TIME_SERIES_WEEKLY";
             break;
+        case TimeSeriesEnum.BATCH:
+            timeSeriesToken = "BATCH_STOCK_QUOTES";
+            break;
         default:
             timeSeriesToken = "TIME_SERIES_DAILY";
             break;
     }
 
+    var symbolOrSymbols;
+    var stockTokenString = "";
+    if (Array.isArray(stockTokens)){
+        for (var token in stockTokens)
+            stockTokenString = stockTokenString + stockTokens[token] + ",";
+        stockTokenString = stockTokenString.substring(0, stockTokenString.length - 1);
+        symbolOrSymbols = "symbols";
+    } else {
+        stockTokenString = stockTokens;
+        symbolOrSymbols = "symbol";
+    }
 
-    var url = `https://www.alphavantage.co/query?function=${timeSeriesToken}&symbol=${stockToken}&apikey=${API_KEY}`;
+    var url = `https://www.alphavantage.co/query?function=${timeSeriesToken}&${symbolOrSymbols}=${stockTokenString}&apikey=${API_KEY}`;
 
     return new Promise((resolve, reject) => {
         var http = new XMLHttpRequest();
@@ -40,23 +55,19 @@ function requestStockData(stockToken, timeSeries){
 }
 
 function getJsonTimeSeriesIndicator(timeSeries){
-    var timeSeriesJSONIndicator;
     switch (timeSeries) {
+        case TimeSeriesEnum.BATCH:
+            return "Stock Quotes";
         case TimeSeriesEnum.DAILY:
-            timeSeriesJSONIndicator = "Time Series (Daily)";
-            break;
+            return "Time Series (Daily)";
         case TimeSeriesEnum.INTRADAY:
-            timeSeriesJSONIndicator = "Time Series (15min)";
-            break;
+            return "Time Series (15min)";
         case TimeSeriesEnum.MONTHLY:
-            timeSeriesJSONIndicator = "Monthly Time Series";
-            break;
+            return "Monthly Time Series";
         case TimeSeriesEnum.WEEKLY:
-            timeSeriesJSONIndicator = "Weekly Time Series";
+            return "Weekly Time Series";
             break;
         default:
-            timeSeriesJSONIndicator = "Time Series (Daily)";
-            break;
+            return "Time Series (Daily)";
     }
-    return timeSeriesJSONIndicator;
 }
