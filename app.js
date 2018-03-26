@@ -66,7 +66,7 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     client.connect(function(err){if (err) throw err;});
 
     //BUILD THE SQL STATEMENT
-    var SQL = "INSERT INTO Acc SET username = ?, email = ?, pass = ?";
+    var SQL = "INSERT INTO User_Information SET username = ?, email = ?, pass = ?";
 
     client.query(SQL, [euname, eemail, hasho], function (err, result) {
         if (err)
@@ -77,7 +77,7 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     });
 
     //NEW SQL STATEMENT FOR THE OTHER TABLE
-    SQL = "INSERT INTO FandLName SET username = ?, fname = ?, lname = ?";
+    SQL = "INSERT INTO Users SET username = ?, fname = ?, lname = ?";
 
     client.query(SQL, [euname, efname, elname], function (err, result) {
         if (err)
@@ -119,7 +119,7 @@ function database_check(cuname,cpass, callback)
     client.connect(function(err){if (err) throw err;});
 
     //BUILD THE SQL STATEMENT
-    var SQL = "SELECT * FROM Acc WHERE username = ?";
+    var SQL = "SELECT * FROM User_Information WHERE username = ?";
 
     client.query(SQL, [cuname], function (err, row) {
         if(err)
