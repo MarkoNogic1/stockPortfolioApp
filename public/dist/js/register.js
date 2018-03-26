@@ -50,46 +50,85 @@ function submit()
         form_entry_error(1, 0, 0, 0);
         valid = false;
     }
-	var splChars = "*|,\":<>[]{}`\';()&$#%";
-		for (var i = 0; i < user.length; i++) 
+	var splChars = "*|,\":<>[]{}`\';()&$#%\\";
+	for (var i = 0; i < user.length; i++) 
+	{
+		if (splChars.indexOf(user.charAt(i)) != -1)
 		{
-			if (splChars.indexOf(user.charAt(i)) != -1)
-			{
-				alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%"); 
-				form_entry_error(1, 0, 0, 0);
-				valid = false;
-			}
+			alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\"); 
+			form_entry_error(1, 0, 0, 0);
+			valid = false;
 		}
+	}
 
+	
     if (email === null || email === "" || !email.includes("@") || !email.includes("."))
     {
         form_entry_error(0, 1, 0, 0);
         valid = false;
     }
+	
 
     if (firstname === null || firstname === "")
     {
         form_entry_error(0, 0, 0, 1);
         valid = false;
     }
+	for (var i = 0; i < firstname.length; i++) 
+	{
+		if (splChars.indexOf(firstname.charAt(i)) != -1)
+		{
+			alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\"); 
+			form_entry_error(0, 0, 0, 1);
+			valid = false;
+		}
+	}
+	
 
     if (lastname === null || lastname === "")
     {
         form_entry_error(0, 0, 0, 1);
         valid = false;
     }
+	for (var i = 0; i < lastname.length; i++) 
+	{
+		if (splChars.indexOf(lastname.charAt(i)) != -1)
+		{
+			alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\"); 
+			form_entry_error(0, 0, 0, 1);
+			valid = false;
+		}
+	}
 
     if (password_temp === null || password_temp === "" || password_temp.length < 8)
     {
         form_entry_error(0, 0, 1, 0);
         valid = false;
     }
+	for (var i = 0; i < password_temp.length; i++) 
+	{
+		if (splChars.indexOf(password_temp.charAt(i)) != -1)
+		{
+			alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\"); 
+			form_entry_error(0, 0, 1, 0);
+			valid = false;
+		}
+	}
 
     if (password_re === null || password_re === "")
     {
         form_entry_error(0, 0, 1, 0);
         valid = false;
     }
+	for (var i = 0; i < password_re.length; i++) 
+	{
+		if (splChars.indexOf(password_re.charAt(i)) != -1)
+		{
+			alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\"); 
+			form_entry_error(0, 0, 1, 0);
+			valid = false;
+		}
+	}
 
     //Next, we'll check to see if the passwords match.
     if (password_temp !== password_re)
