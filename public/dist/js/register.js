@@ -51,7 +51,7 @@ function submit()
         valid = false;
     }
 
-    if (email === null || email === "")
+    if (email === null || email === "" || !email.includes("@"))
     {
         form_entry_error(0, 1, 0, 0);
         valid = false;
