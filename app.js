@@ -15,11 +15,11 @@ var encrypt = require('bcrypt');
 //===================================================================================================================
 
 //Change these values once we know the credentials of the real database,
-const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
-const DBuser = 'YOUR_USER_HERE'; //The user. Hopefully won't be root.
-const DBpassword = 'YOUR_PASSWORD_HERE'; //The login for the user, if there *is* one.
+const DBhostname = 'csc490stockproject.cxwyjtmvrcxs.us-east-2.rds.amazonaws.com'; //The host name. Certainly won't be local host.
+const DBuser = 'csc490'; //The user. Hopefully won't be root.
+const DBpassword = 'phpSucks'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
-const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
+const DBtitle = 'csc490a'; //The name of the database as specified in the SQL document.
 
 //===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SERVER AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
