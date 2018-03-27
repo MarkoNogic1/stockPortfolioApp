@@ -15,11 +15,11 @@ var encrypt = require('bcrypt');
 //===================================================================================================================
 
 //Change these values once we know the credentials of the real database,
-const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
-const DBuser = 'YOUR_USER_HERE'; //The user. Hopefully won't be root.
-const DBpassword = 'YOUR_PASSWORD_HERE'; //The login for the user, if there *is* one.
+const DBhostname = 'csc490stockproject.cxwyjtmvrcxs.us-east-2.rds.amazonaws.com'; //The host name. Certainly won't be local host.
+const DBuser = 'csc490'; //The user. Hopefully won't be root.
+const DBpassword = 'phpSucks'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
-const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
+const DBtitle = 'csc490a'; //The name of the database as specified in the SQL document.
 
 //===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SERVER AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,7 +66,7 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     client.connect(function(err){if (err) throw err;});
 
     //BUILD THE SQL STATEMENT
-    var SQL = "INSERT INTO Acc SET username = ?, email = ?, pass = ?";
+    var SQL = "INSERT INTO User_Information SET username = ?, email = ?, pass = ?";
 
     client.query(SQL, [euname, eemail, hasho], function (err, result) {
         if (err)
@@ -77,7 +77,7 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     });
 
     //NEW SQL STATEMENT FOR THE OTHER TABLE
-    SQL = "INSERT INTO FandLName SET username = ?, fname = ?, lname = ?";
+    SQL = "INSERT INTO Users SET username = ?, fname = ?, lname = ?";
 
     client.query(SQL, [euname, efname, elname], function (err, result) {
         if (err)
@@ -119,7 +119,7 @@ function database_check(cuname,cpass, callback)
     client.connect(function(err){if (err) throw err;});
 
     //BUILD THE SQL STATEMENT
-    var SQL = "SELECT * FROM Acc WHERE username = ?";
+    var SQL = "SELECT * FROM User_Information WHERE username = ?";
 
     client.query(SQL, [cuname], function (err, row) {
         if(err)
