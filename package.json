@@ -1,17 +1,22 @@
 {
-  "name": "test",
+  "name": "stockportfoliov2.0",
   "version": "1.0.0",
-  "description": "test",
+  "description": "Stock portfolio application",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Marko Nogic",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.3",
-    "ejs": "^2.5.7",
-    "express": "^4.16.2",
-    "mysql": "^2.15.0"
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.8",
+    "express": "^4.16.3",
+    "express-myconnection": "^1.0.4",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.1.0",
+    "mysql": "^2.15.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }
