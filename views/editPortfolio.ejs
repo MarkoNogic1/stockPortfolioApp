@@ -35,6 +35,9 @@
 </head>
 
 <body>
+<!-- SCRIPTS -->
+<script src="/js/EditPortfolio_Functions.js"></script>
+<!-- SCRIPTS -->
 
     <div id="wrapper">
         <!-- Navigation -->
@@ -69,94 +72,126 @@
 
                             <!-- Tab panes -->
                             <div class="tab-content">
+
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+                                <!-- ADD DOMAIN -->
+
                                 <div class="tab-pane fade in active" id="add">
                                     <h3>Add Stock</h3>
-                                    <div class="form-group">
-                                        <label>Stock to Add</label>
-                                        <div class="form-group input-group">
-                                            <input type="text" class="form-control">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
+
+                                    <form role="form" id="addStockForm" action="/addstock" method="POST">
+
+                                        <div class="form-group">
+                                            <label>Stock to Add</label>
+                                            <div class="form-group input-group">
+                                                <input type="text" class="form-control" name="StockName" id="StockName">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Amount of Shares</label>
-                                        <input class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Select a Sector</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Date of Acquisition</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-success">Add</button>
-                                        <button type="button" class="btn btn-default">Cancel</button>
-                                    </div>
+
+                                        <div class="form-group">
+                                            <label>Amount of Shares</label>
+                                            <input class="form-control" name="ShareNumber" id="ShareNumber">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Select a Sector</label>
+                                            <select class="form-control" name="SectorNumber" id="SectorNumber">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Date of Acquisition</label>
+                                            <input type="date" class="form-control" name="DateAquired" id="DateAquired">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-success" onclick="submit_ADD()">Add</button>
+                                            <a href="home" class="btn btn-default" role="button" aria-pressed="true">Cancel</a>
+                                        </div>
+
+                                    </form>
                                 </div>
+                                <!-- ADD DOMAIN -->
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+                                <!-- REMOVE DOMAIN -->
                                 <div class="tab-pane fade" id="remove">
                                     <h3>Remove Stock(s)</h3>
-                                    <div class="form-group">
-                                        <label>Select Stock(s) to Remove</label>
-                                    </div>
-                                    <div class="form-group">
-                                        <select multiple class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-danger">Remove</button>
-                                        <button type="button" class="btn btn-default">Cancel</button>
-                                    </div>
+
+                                    <form id="removal_form" action="/deletestock" method="POST">
+                                        <div class="form-group">
+                                            <label>Select Stock(s) to Remove</label>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <select multiple class="form-control" name="RemoveSelect" id="StockSelector1">
+                                            <!-- OPTIONS WILL BE ADDED DYNAMICALLY -->
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-danger" onclick="submit_REMOVE()">Remove</button>
+                                            <a href="home" class="btn btn-default" role="button" aria-pressed="true">Cancel</a>
+                                        </div>
+                                    </form>
+
                                 </div>
+                                <!-- REMOVE DOMAIN -->
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+                                <!-- EDIT DOMAIN -->
                                 <div class="tab-pane fade" id="edit">
                                     <h3>Edit Stock</h3>
-                                    <div class="form-group">
-                                        <label>Select Stock to Edit</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Edit Date of Acquisition</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Edit Sector</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Edit Amount of Shares</label>
-                                        <input class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-success">Edit Stock</button>
-                                        <button type="button" class="btn btn-default">Cancel</button>
-                                    </div>
+                                    <form id="edit_form" action="/editstock" method="POST">
+                                        <div class="form-group">
+                                            <label>Select Stock to Edit</label>
+                                            <select class="form-control" name="EditSelect" id="StockSelector2">
+                                                <!-- STUFF PUT HERE-->
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Edit Date of Acquisition</label>
+                                            <input type="date" class="form-control" name="EditDate">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Edit Sector</label>
+                                            <select class="form-control" name="EditSector">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Edit Amount of Shares</label>
+                                            <input class="form-control" name="EditShares">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-success" onclick="submit_EDIT()">Edit Stock</button>
+                                            <a href="home" class="btn btn-default" role="button" aria-pressed="true">Cancel</a>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <!-- EDIT DOMAIN -->
+                                <!-- ======================================================================== -->
+                                <!-- ======================================================================== -->
+
                             </div>
                         </div>
                     </div>
@@ -165,7 +200,6 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
 
@@ -180,6 +214,7 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
+    <script> addOptions() </script>
 
 </body>
 
