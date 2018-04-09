@@ -9,6 +9,7 @@ CREATE TABLE User_Information(
 	username varchar(45) NOT NULL,
     email varchar(45) NOT NULL,
     pass  BINARY(60) NOT NULL,
+    portfolio LONGTEXT,
     
 	PRIMARY KEY(username)
  );
