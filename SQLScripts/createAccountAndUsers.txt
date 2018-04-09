@@ -1,0 +1,19 @@
+USE csc490a
+
+CREATE TABLE User_Information(
+    username varchar(45) NOT NULL,
+    email varchar(45) NOT NULL,
+    pass  varchar(45) NOT NULL,
+    
+    PRIMARY KEY(username)
+ );
+
+CREATE TABLE Users(
+
+    username varchar(45) NOT NULL,
+    fname varchar(45) NOT NULL,
+    lname varchar(45) NOT NULL,
+    
+    PRIMARY KEY(username)
+);
+
