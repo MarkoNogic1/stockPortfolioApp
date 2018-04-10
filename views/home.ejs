@@ -27,7 +27,7 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
 
     <!-- Stock Data Requester -->
-    <script src="/js/stockDataRequester.js"></script>
+    <script src="dist/js/stockDataRequester.js"></script>
 
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -40,94 +40,107 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- Custom Home Page Script -->
+    <script src="/js/home.js"></script>
 
     <!-- Unit Test Script -->
-    <!-- <script src="/dist/js/unitTest.js"></script> -->
+    <script src="/dist/js/unitTest.js"></script>
 </head>
 
 <body>
-<!-- Custom Home Page Script -->
-<script src="/js/home.js"></script>
+    <% include navMenu %>
 
-<% include navMenu %>
-
-<div id="wrapper">
-    <div id="page-wrapper">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Home</h1>
-            </div>
-            <div class="panel">
-                <!-- /.row -->
-                <div class="panel-body">
-                    <div class="row" id="bubbleContainer"></div>
+    <div id="wrapper">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Home</h1>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-list-alt fa-fw"></i> Summary
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div id="table"></div>
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-            </div>
-            <div class="col-lg-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-bar-chart-o fa-fw"></i> Stock Tracker
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Time Frame
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Intra-day</a>
-                                    </li>
-                                    <li><a href="#">Daily</a>
-                                    </li>
-                                    <li><a href="#">Weekly</a>
-                                    </li>
-                                    <li><a href="#">Monthly</a>
-                                    </li>
-                                </ul>
+                    <div class="panel">
+                        <!-- /.row -->
+                        <div class="panel-body">
+                            <div class="row" id="bubbleContainer">
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="panel panel-gray">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <i class="fa fa-5x"></i>
+                                                </div>
+                                                <div class="col-xs-9 text-right">
+                                                    <div class="huge">$999.99</div>
+                                                    <div class="sectorLabel">ALL</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div id="chart"></div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-list-alt fa-fw"></i> Summary
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="table"></div>
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
                     </div>
-                    <!-- /.panel-body -->
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bar-chart-o fa-fw"></i> Stock Tracker
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                            Time Frame
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="#">Intra-day</a>
+                                            </li>
+                                            <li><a href="#">Daily</a>
+                                            </li>
+                                            <li><a href="#">Weekly</a>
+                                            </li>
+                                            <li><a href="#">Monthly</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="chart"></div>
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+                    </div>
+                    <!-- /.col-lg-8 -->
                 </div>
-                <!-- /.panel -->
+                <!-- /#page-wrapper -->
+                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.col-lg-8 -->
-        </div>
-        <!-- /#page-wrapper -->
-        <!-- /.col-lg-12 -->
     </div>
-</div>
-<!-- /#wrapper -->
+    <!-- /#wrapper -->
 
-<!-- jQuery -->
-<script src="../vendor/jquery/jquery.min.js"></script>
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
-<!-- Metis Menu Plugin JavaScript -->
-<script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
-<!-- Custom Theme JavaScript -->
-<script src="../dist/js/sb-admin-2.js"></script>
-
-<script> buildPortfolioFromDB() </script>
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
 
 </body>
 
