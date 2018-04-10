@@ -20,21 +20,17 @@ class Stock{
 google.charts.load('current', {'packages':['corechart', 'table']});
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
-var stockTokens = ["WAL", "MSFT","FB","AMD","LOW","T","ALL"];
+var userData = getUserPortfolioData();
+var stockTokens = [];
+for (var i in userData.sectors){
+    for (var j in userData.sectors[i].stocks)
+        stockTokens.push(userData.sectors[i].stocks[j]["tokenName"]);
+}
 
+populateSummaryTable(stockTokens);
+getSectorsWithPrices();
 
-populateGraph(stockTokens[0]);
-populateSummaryTable();
-console.log(getUserPortfolioData());
-
-$(document).ready(function() {
-    var sectorsWithPrices = [
-        ["Retail", "$94.01", true],//Sector Name, Current Value, isIncreasingInValue
-        ["Technology", "$343.88", false],
-        ["Telecommunications", "$11.00", false],
-        ["Insurance", "$27.00", false]
-    ]
-
+function generateSectorBubbles(sectorsWithPrices){
     for (var sector in sectorsWithPrices) {
         var bubble = $("<div></div>").addClass("col-lg-3 col-md-6");
         var panel = $("<div></div>").addClass("panel");
@@ -43,17 +39,17 @@ $(document).ready(function() {
         var symbolCol = $("<div></div>").addClass("col-xs-3");
         var textCol = $("<div></div>").addClass("col-xs-9 text-right");
         var symbol = $("<i></i>").addClass("fa fa-5x");
-        var sectorText = $("<div></div>").append(sectorsWithPrices[sector][0]);
-        var priceText = $("<div></div>").addClass("huge").append(sectorsWithPrices[sector][1]);
+        var sectorText = $("<div></div>").append(sectorsWithPrices[sector][0]).addClass("sectorLabel");
+        var priceText = $("<div></div>").addClass("huge").append('$' + sectorsWithPrices[sector][1].toFixed(2));
 
-        if (sectorsWithPrices[sector][2]) {
+        if (sector % 3 == 0)
             panel.addClass("panel-green");
-            symbol.addClass("fa-arrow-circle-up");
-        }
-        else {
-            panel.addClass("panel-red");
-            symbol.addClass("fa-arrow-circle-down");
-        }
+        else if (sector % 2 == 0)
+            panel.addClass("panel-primary");
+        else
+            panel.addClass("panel-yellow");
+
+        //symbol.addClass("fa-arrow-circle-down");
 
         textCol.append(priceText);
         textCol.append(sectorText);
@@ -63,13 +59,20 @@ $(document).ready(function() {
         panelHeading.append(row);
         panel.append(panelHeading);
         bubble.append(panel);
+        bubble.addClass("bubble");
 
-        console.log(bubble);
         $("#bubbleContainer").append(bubble);
     }
-});
+    var bubbles = $(".bubble");
+    for (var i = 0; i < bubbles.length; i++) {
+        bubbles[i].addEventListener("click", function (e) {
+            var sectorName = $(this).find(".sectorLabel")[0].innerText;
+            populateSummaryTable(arrayColumn(getSectorByName(userData.sectors, sectorName)[0].stocks,"tokenName"));
+        });
+    }
+}
 
-function populateSummaryTable() {
+function populateSummaryTable(stockTokens) {
     var summaryData = [['Stock Token', 'Current Value']];
     var summaryTimeSeries = TimeSeriesEnum.BATCH;
     var summaryTimeSeriesIndicator = getJsonTimeSeriesIndicator(summaryTimeSeries);
@@ -88,6 +91,8 @@ function populateSummaryTable() {
 
         google.visualization.events.addListener(table, 'select', tableRowClick);
 
+        populateGraph(stockTokens[0]);
+
         function tableRowClick(){
             var selectedRow = table.getSelection()[0].row;
             var selectedToken = summaryData[selectedRow + 1][0];
@@ -96,6 +101,29 @@ function populateSummaryTable() {
     });
 }
 
+function getSectorsWithPrices() {
+    var timeSeries = TimeSeriesEnum.BATCH;
+    var timeSeriesIndicator = getJsonTimeSeriesIndicator(timeSeries);
+    var sectorsWithPrices = [];
+
+    requestStockData(stockTokens, timeSeries).then(function (response) {
+        var stockData = JSON.parse(response)[timeSeriesIndicator];
+
+        for (var i in userData.sectors){
+            sectorsWithPrices.push([userData.sectors[i].sectorName, 0]);
+            var stocks = userData.sectors[i].stocks;
+
+            for (var tokenAPI in stockData) {
+                for (var tokenDB in stocks){
+                    if (stockData[tokenAPI]["1. symbol"] === stocks[tokenDB].tokenName)
+                        sectorsWithPrices[i][1] += parseFloat(stockData[tokenAPI]["2. price"]);
+                }
+            }
+        }
+
+        generateSectorBubbles(sectorsWithPrices);
+    });
+}
 
 function populateGraph(stockToken) {
     var graphData = [['Date', 'Price']];
@@ -143,54 +171,14 @@ function getUserPortfolioData(){
     var sectors = [new Sector("Retail", retailStocks), new Sector("Technology", techStocks), new Sector("Communication", commStocks)];
 
     var data = new UserPortfolioData(sectors);
-    return JSON.stringify(data);
+    return data;
 }
 
-//DATABASE READ SECTION
-
-function buildPortfolioFromDB()
-{
-    //What to do:
-    //XMLrequest for the database's string.
-    //Break it apart and call the function for each entry.
-    var xhttp = new XMLHttpRequest();
-    //What to do when the data is ready.
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200 && this.responseText !== undefined && this.responseText !== 'undefined' && this.responseText !== 'null' && this.responseText !== null && this.responseText !== '')
-        {
-            var longstring = this.responseText;
-
-
-            var portarray = longstring.split("&");
-
-            for (var index = 0; index < portarray.length; ++index)
-            {
-                var stock = portarray[index];
-
-                if(stock !== undefined && stock !== 'undefined' && stock !== 'null' && stock !== null && stock !== '')
-                {
-                    var values = stock.split("^");
-                    var stockID = values[0];
-                    var stockName = values[1];
-                    var stockNumber = values[2];
-                    var stockSector = values[3];
-                    var stockDate = values[4];
-
-                    createStockHTML(stockID, stockName, stockNumber, stockSector, stockDate);
-                }
-            }
-        }
-    };
-
-    //The call
-    xhttp.open("GET", "/getPortfolioData", true);
-    xhttp.send();
+function getSectorByName(data, sectorName) {
+    return data.filter(
+        function(data){ return data.sectorName === sectorName }
+    );
 }
 
-//============================================================================================
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ANDY AND MCKENZIE ZONE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//============================================================================================
-function createStockHTML(ID, name, Number, Sector, Date)
-{
-    //stuff
-}
+
+
