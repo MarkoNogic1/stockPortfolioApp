@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var db = require('../db');
 
 app.get("/", function(req, res){
     res.render("login", {title: 'Login Page'})
@@ -8,10 +9,7 @@ app.get("/", function(req, res){
 app.post("/", function(req,res){
     var email= req.body.email;
     var password = req.body.password;
-    console.log(email);
-    console.log(password);
-    req.getConnection(function(error, conn){
-        conn.query('SELECT * FROM user_info WHERE email = ?',[email], function (error, results, fields) {
+        db.query('SELECT * FROM user_info WHERE email = ?',[email], function (error, results, fields) {
         if (error) {
             // console.log("error ocurred",error);
             res.send({
@@ -44,6 +42,5 @@ app.post("/", function(req,res){
             }
         }
     })});
-});
 
 module.exports = app;
