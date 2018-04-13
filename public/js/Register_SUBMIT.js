@@ -45,13 +45,26 @@ function submit()
     var valid = true;
     var success = false;
     //Here's where it gets complicated. So, we have our credentials. First we should check null.
+
+    //%%%%%%%%%%%% USER SECTION %%%%%%%%%%%%
     if (user === null || user === "")
     {
         form_entry_error(1, 0, 0, 0);
         valid = false;
     }
+    var splChars = "*|,\":<>[]{}`\';()&$#%";
+    for (var i = 0; i < user.length; i++)
+    {
+        if (splChars.indexOf(user.charAt(i)) !== -1)
+        {
+            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%");
+            form_entry_error(1, 0, 0, 0);
+            valid = false;
+        }
+    }
 
-    if (email === null || email === "")
+    //%%%%%%%%%%%% EMAIL SECTION %%%%%%%%%%%%
+    if (email === null || email === ""  || !email.includes("@") || !email.includes("."))
     {
         form_entry_error(0, 1, 0, 0);
         valid = false;
@@ -63,22 +76,65 @@ function submit()
         valid = false;
     }
 
+    //%%%%%%%%%%%% FIRSTNAME SECTION %%%%%%%%%%%%
+    for (i = 0; i < firstname.length; i++)
+    {
+        if (splChars.indexOf(firstname.charAt(i)) !== -1)
+        {
+    		alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+    		form_entry_error(0, 0, 0, 1);
+    		valid = false;
+        }
+    }
+
+    //%%%%%%%%%%%% LASTNAME SECTION %%%%%%%%%%%%
     if (lastname === null || lastname === "")
     {
         form_entry_error(0, 0, 0, 1);
         valid = false;
     }
 
+    for (i = 0; i < lastname.length; i++)
+    {
+        if (splChars.indexOf(lastname.charAt(i)) !== -1)
+        {
+            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            form_entry_error(0, 0, 0, 1);
+            valid = false;
+        }
+    }
+
+    //%%%%%%%%%%%% PASSWORD SECTION %%%%%%%%%%%%
     if (password_temp === null || password_temp === "")
     {
         form_entry_error(0, 0, 1, 0);
         valid = false;
     }
 
+    for (i = 0; i < password_temp.length; i++)
+    {
+        if (splChars.indexOf(password_temp.charAt(i)) !== -1)
+        {
+            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            form_entry_error(0, 0, 1, 0);
+            valid = false;
+        }
+    }
+
     if (password_re === null || password_re === "")
     {
         form_entry_error(0, 0, 1, 0);
         valid = false;
+    }
+
+    for (i = 0; i < password_re.length; i++)
+    {
+        if (splChars.indexOf(password_re.charAt(i)) !== -1)
+        {
+            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            form_entry_error(0, 0, 1, 0);
+            valid = false;
+        }
     }
 
     //Next, we'll check to see if the passwords match.
