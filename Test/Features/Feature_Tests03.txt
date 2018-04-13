@@ -1,0 +1,89 @@
+#PORTFOLIO BACKEND TESTS
+#29 -
+	Given I have all the forms filled on the Add Stock page
+	When I invoke the Submit function
+	The information given will appear in the database
+
+#30 - 
+	Given I have chosen a stock to delete on the remove stock page
+	When I invoke the remove function
+	The information of that stock will be removed from the database
+
+#31 -
+	Given I have chosen a stock to edit and have filled all the given fields
+	When I invoke the edit function
+	The information of that stock will be changed while retaining its position (not deleted/replaced)
+
+
+#PORTFOLIO FRONT END TESTS
+#32 -
+	Given I have added stocks to portfolio and this my portfolio is not empty
+	When I invoke a stock selector in remove or edit stocks
+	All stocks added will be listed
+
+#33 -
+	Given I am on the Edit Portfolio page
+	When I invoke the cancel function
+	I will be returned to the home page
+
+#34-
+	Given that I have already entered stock(s) into my portfolio
+	When I load the View Stocks Page
+	The information string detailing the stocks in your portfolio will be shown. 
+
+#35-
+	Given that I have stock(s) in my portfolio
+	When I remove one or more stocks from my portfolio through the edit stocks page,
+	The View Stocks page will no longer show the removed stocks in the info string. 
+
+#36- 
+	Given that I log into the application as a different user with a portfolio
+	When I load the View Stocks Page
+	The stock information string for the newly logged in user will be displayed.
+#37-
+	Given I have have stocks and have deleted a stock
+	When the method to display the selectable stocks for deletion and editing is invoked
+	The deleted stock must not appear
+
+#38-
+	Given the add stock page and fields are left blank
+	When the submit function is invoked
+	An error must be shown and the submission should fail
+
+#39-
+	Given the add stock page and the name field contains special characters
+	When the submit function is invoked
+	An error must be shown and the submission should fail
+
+#40-
+	Given the add stock page and the number of shares fields has non-numeric characters
+	When the submit function is invoked
+	An error must be shown and the submission should fail
+
+#41-
+	Given the add stock page and the date field has an invalid date (days >31, months >12) or is not completed
+	When the submit function is invoked
+	An error must be shown and the submission should fail
+
+#SESSIONS NEW FRONT END TESTS
+#42-
+	Given I have previously logged in and have now logged out
+	When I log into a different account
+	Home Page will display the new user account information
+
+#DATABASE NEW BACKEND TESTS
+#43-
+	Given the registration page and all the fields are valid
+	When the submit function is invoked
+	The inputted password will be encrypted and saved as a BLOB in the database
+
+#44-
+	Given the login page and all the fields are valid and the password for the given user matches
+	When the submit function is invoked
+	The inputted password should be matched to the stored encrypted password
+
+#SESSIONS BACKEND TESTS
+#45-
+	Given I have logged in
+	When I check my stored cookies
+	The cookies used by sessions should be encrypted

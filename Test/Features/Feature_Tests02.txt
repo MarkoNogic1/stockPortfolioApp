@@ -63,7 +63,7 @@ HOME PAGE TESTS
 #26-
 	Given the user logs in 
 	When the user is directed to the home page
-	Then the Summary panel will load with a table of the userâ€™s stocks and current values
+	Then the Summary panel will load with a table of the user’s stocks and current values
 
 #27-
 	Given the user logs in and the home page is loaded
@@ -74,16 +74,3 @@ HOME PAGE TESTS
 	Given the user is on the home page
 	When they click on the drop down in the Stock Tracker panel
 	Then there will be displayed a list of intervals to choose from
-
-#29
-	Given a user on the login/registration page
-	When they click the register button
-	And then they fill out the registration information
-	And then click the register button
-Then the AWS database table User is populated with the username, email, and password used for registering
-
-#30
-	Given a user on the login/registration page
-	When they input a correct username and password
-	And then click the login button
-Then the database table User is queried with the username, email, and password used for registering and allows the user to login
