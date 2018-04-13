@@ -8,18 +8,31 @@ var router = express.Router();
 
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
-var encrypt = require('bcrypt');
+var bcrypt = require('bcrypt');
+
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var cookieSession = require('cookie-session');
 
 //===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DATABASE AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //===================================================================================================================
 
 //Change these values once we know the credentials of the real database,
+
+/*
 const DBhostname = 'csc490stockproject.cxwyjtmvrcxs.us-east-2.rds.amazonaws.com'; //The host name. Certainly won't be local host.
 const DBuser = 'csc490'; //The user. Hopefully won't be root.
 const DBpassword = 'phpSucks'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
 const DBtitle = 'csc490a'; //The name of the database as specified in the SQL document.
+*/
+
+const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
+const DBuser = 'root'; //The user. Hopefully won't be root.
+const DBpassword = '1q@W3e$R'; //The login for the user, if there *is* one.
+const DBportNumber = 3306; //The port to connect from, default is 3306
+const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
 
 //===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SERVER AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,6 +44,16 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieSession({
+    //THE SESSIONS USE THE VARIABLES:
+    //uname - USERNAME
+    //email - EMAIL
+    name: 'session',
+    keys: ["superSecretKeysGoHere"],
+
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 app.listen(3000, function () {
     console.log('Stock application is listening on port 3000.');
@@ -47,12 +70,10 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     //So, first, we need to know what the hell it is that's in this req. I assume the form data is in here...somewhere.
     //If I can extract that data, I can then, FINALLY get in those SQL queries.
     const salt = 10; //For encryption
-    var hasho = null; //The hash
-    var valid = null; //Validation
+    var valid = true;
 
-    //We will skip hashing for now.
-
-    hasho = epass;
+    var salto = bcrypt.genSaltSync(salt);
+    var hasho = bcrypt.hashSync(epass, salto);
 
     //OPEN CONNECTION TO DATABASE [TEMPORARY]
     var client  = mysql.createConnection({
@@ -68,28 +89,28 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     //BUILD THE SQL STATEMENT
     var SQL = "INSERT INTO User_Information SET username = ?, email = ?, pass = ?";
 
-    client.query(SQL, [euname, eemail, hasho], function (err, result) {
-        if (err)
+    client.query(SQL, [euname, eemail, hasho], function (error, result) {
+        if (error)
         {
-            callback(err,null);
+            console.log("Some Error");
+            console.log(error);
+            callback(error, null);
         }
-        console.log(result);
     });
 
-    //NEW SQL STATEMENT FOR THE OTHER TABLE
+    //NEW SQL STATEMENT FOR THE OTHER TABLE. WE CAN MOVE ON. IF ONE FAILS, SO MUST THE OTHER
     SQL = "INSERT INTO Users SET username = ?, fname = ?, lname = ?";
 
-    client.query(SQL, [euname, efname, elname], function (err, result) {
-        if (err)
-        {
-            callback(err,null);
+    client.query(SQL, [euname, efname, elname], function (error, result) {
+        if (error) {
+            console.log("Some Error 2");
+            console.log(error);
+            callback(error, null);
         }
         else
         {
-            callback(null,null);
+            callback(null, null);
         }
-        console.log(result);
-        //return 1;
     });
 
     client.end();
@@ -97,15 +118,8 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
 
 
 //GOING
-function database_check(cuname,cpass, callback)
+function database_check(cuname, cpass, callback)
 {
-    const salt = 10; //For encryption
-    var hasho = null; //The hash
-    var valid = null; //Validation
-
-    //We will skip hashing for now.
-
-    hasho = cpass;
 
     //OPEN CONNECTION TO DATABASE [TEMPORARY]
     var client  = mysql.createConnection({
@@ -135,7 +149,7 @@ function database_check(cuname,cpass, callback)
                 // do something with your row variable
 
                 //Does given password match stored password?
-                if (String(hasho) === String(row[0].pass))
+                if (bcrypt.compareSync(cpass, String(row[0].pass)))
                 {
                     //Then It's Okay.
                     console.log(row[0].username);
@@ -197,6 +211,47 @@ app.get("/register/error", function(req,res){
 });
 
 //===================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTIONAL GETS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//===================================================================================================================
+
+app.get("/getnavbardata", function(req, res){
+    //req.session.reload();
+    var data = req.session;
+
+    var sendback = data.uname + "&" + data.email;
+
+    res.send(String(sendback));
+});
+
+app.get("/getPortfolioData", function(req, res){
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+    //Here we need to send the string back.
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "SELECT * FROM Stocks WHERE username = ?";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [LOCALusern], function (err, row){
+        console.log(row);
+        var senback = row;
+        console.log("Post JSON. Does it work.");
+        console.log(senback);
+        res.send(senback);
+        client.end();
+    });
+});
+
+//===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% REGISTER AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //===================================================================================================================
 app.post('/register', function(req, res, next){
@@ -233,14 +288,18 @@ app.post('/login', function(req, res, next){
         if (!err)
         {
             console.log(data[0]);
-            var cook = "user="+String(data[0])+";";
-            var cook2 = "email="+String(data[1])+";";
-            var cookfull = cook + cook2;
+            //var cook = "user="+String(data[0])+";";
+            //var cook2 = "email="+String(data[1])+";";
+            //var cookfull = cook + cook2;
 
             //TODO: Send back a cookie with the user and email
-            res.setHeader('Set-Cookie', String(cook));
-            res.setHeader('Set-Cookie', String(cook2));
-            res.setHeader('Content-Type', 'text/plain');
+            //res.setHeader('Set-Cookie', String(cook));
+            //res.setHeader('Set-Cookie', String(cook2));
+            //res.setHeader('Content-Type', 'text/plain');
+
+            var sessData = req.session;
+            sessData.uname = String(data[0]);
+            sessData.email = String(data[1]);
 
             res.redirect('/home');
 
@@ -251,4 +310,123 @@ app.post('/login', function(req, res, next){
             res.render("login.ejs");
         }
     });
+});
+
+//===================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ADD STOCK AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//===================================================================================================================
+app.post('/addstock', function(req, res, next) {
+
+    //++ FORM DATA ++
+    var name = String(req.body.StockName);
+    var SNumer = String(req.body.ShareNumber);
+    var SecNumer = String(req.body.SectorNumber);
+    var DateA = String(req.body.DateAquired);
+    var SValue = String(req.body.StockValue);
+
+    //++ SESSION DATA++
+    //++ USES UNAME ++
+    //++ USES EMAIL ++
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+
+    var client = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    //Here we just put in the stuff.
+    client.connect(function (err) {if (err) throw err;});
+
+    var SQL = "INSERT INTO Stocks SET username = ?, stockname = ?, sharesnumber = ?, sectornumber = ?, dateaquired = ?, stockvalue = ?";
+
+    client.query(SQL, [LOCALusern, name, SNumer, SecNumer, DateA, SValue], function (err, row){});
+
+    client.end();
+
+    res.redirect('/home');
+});
+
+//===================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% REMOVE STOCK AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//===================================================================================================================
+app.post('/deletestock', function(req, res, next){
+    var StockName = String(req.body.RemoveSelect);
+
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+
+
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    var SQL = "DELETE FROM Stocks WHERE username = ? AND stockname = ?";
+
+    //++ CHECK POSITION ++
+    client.query(SQL, [LOCALusern, StockName], function (err, row){
+
+    });
+
+    client.end();
+
+    res.redirect('/home');
+});
+
+
+//===================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EDIT STOCK AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//===================================================================================================================
+app.post('/editstock', function(req, res, next){
+    //Okay, so this will be the grand combination of adding and deleting.
+    //So, here's the steps:
+    //1.) Pull the string down.
+    //2.) Split it up
+    //3.) If the Stock's ID does not match up, concat it into the new string.
+    //4.) If the Stock's ID DOES match up, create a new stock from the specified values and concat that into the new string.
+    //5.) When done, place that new string into the DB.
+
+    var StockName = String(req.body.EditSelect);
+    var StockDate = String(req.body.EditDate);
+    var StockSector = String(req.body.EditSector);
+    var StockShares = String(req.body.EditShares);
+    var StockValue = String(req.body.EditValue);
+
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+
+    //So what we'll do is this:
+    //1.) Load up the full string.
+    //2.) Break up that string and find the sector with the matching number.
+    //3.) Re-compile the list, sans the stock with the matching number
+    //4.) Update the DB with the new list.
+
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    var SQL = "UPDATE Stocks SET sharesnumber = ?, sectornumber = ?, dateaquired = ?, stockvalue = ? WHERE username = ? AND stockname = ?";
+
+    client.query(SQL, [StockShares, StockSector, StockDate, StockValue, LOCALusern, StockName], function (err, row){
+
+    });
+
+    res.redirect('/home');
+
+
 });
