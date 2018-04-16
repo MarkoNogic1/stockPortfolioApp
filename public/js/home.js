@@ -138,6 +138,8 @@ function getSectorsWithPrices() {
 }
 
 function populateGraph(stockToken) {
+    $("#stockTrackerHeader").html("<i class=\"fa fa-bar-chart-o fa-fw\"></i>Stock Tracker: " + stockToken);
+
     var graphData = [['Date', 'Price']];
     var graphTimeSeries = TimeSeriesEnum.WEEKLY;
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
@@ -151,7 +153,6 @@ function populateGraph(stockToken) {
         var data = google.visualization.arrayToDataTable(graphData);
 
         var options = {
-            title: `${stockToken}: Price History`,
             legend: {position: 'bottom'},
             width: '100%',
             height: '100%',
