@@ -240,8 +240,20 @@ table.dataTable thead .sorting:after {
 .huge {
   font-size: 40px;
 }
+.panel {
+  border-width: 0px;
+}
+.selected {
+  border-color: #0c0c0c !important;
+  border-width: 4px !important;
+}
+.panel-gray {
+  border-color: #787473;
+  color: white;
+  background-color: #787473;
+}
 .panel-green {
-  border-color: #5cb85c;
+  border-color: #51a251;
 }
 .panel-green > .panel-heading {
   border-color: #5cb85c;
