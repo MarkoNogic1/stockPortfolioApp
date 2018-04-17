@@ -39,18 +39,23 @@ function form_entry_error(username_error, password_error)
 {
     if (username_error === 1)
     {
-        document.getElementById("username_error").style.visibility="visible";
+        //document.getElementById("username_error").style.visibility="visible";
+        //document.getElementById("username_error").style.display="inline";
+        $("#username_error").show();
     }
 
     if (password_error === 1)
     {
-        document.getElementById("pass1_error").style.visibility="visible";
+        //document.getElementById("pass1_error").style.display="inline";
+        $("#pass1_error").show();
     }
 
 }
 
 function form_error_clear()
 {
-    document.getElementById("username_error").style.visibility="hidden";
-    document.getElementById("pass1_error").style.visibility="hidden";
+    //document.getElementById("username_error").style.visibility="hidden";
+    //document.getElementById("pass1_error").style.visibility="hidden";
+    $("#pass1_error").hide();
+    $("#username_error").hide();
 }
