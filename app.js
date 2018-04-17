@@ -8,7 +8,7 @@ var router = express.Router();
 
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
