@@ -75,7 +75,16 @@ function generateSectorBubbles(sectorsWithPrices){
     for (var i = 0; i < bubbles.length; i++) {
         bubbles[i].addEventListener("click", function (e) {
             var sectorName = $(this).find(".sectorLabel")[0].innerText;
-            populateSummaryTable(arrayColumn(getSectorByName(userData.sectors, sectorName)[0].stocks,"tokenName"));
+
+            console.log(userData);
+            for (var sectorIndex in userData.sectors){
+                if (userData.sectors[sectorIndex].sectorName === sectorName){
+                    console.log(userData.sectors[sectorIndex].stocks);
+                    populateSummaryTable(userData.sectors[sectorIndex].stocks);
+                    break;
+                }
+            }
+            //populateSummaryTable(arrayColumn(getSectorByName(userData.sectors, sectorName)[0].stocks,"tokenName"));
         });
     }
 }
@@ -121,9 +130,9 @@ function getSectorsWithPrices(sectorData, stockTokens) {
         }
 
         for (var tokenAPI in stockData) {
-            for (var sector in sectorData){
-                if (sectorData[sector]["stocks"].search(stockData[tokenAPI]["1. symbol"]) != -1){
-                    sectorsWithPrices[sector][1] += parseFloat(stockData[tokenAPI]["2. price"]);
+            for (var sectorIndex in sectorData){
+                if (sectorData[sectorIndex]["stocks"].search(stockData[tokenAPI]["1. symbol"]) !== -1){
+                    sectorsWithPrices[sectorIndex][1] += parseFloat(stockData[tokenAPI]["2. price"]);
                 }
             }
         }
@@ -189,7 +198,7 @@ function getUserPortfolioData()
                     sectors.push(sector);
                 }
                 stockTokens = stockTokens.split(",");
-                var userData = new UserPortfolioData(sectors);
+                userData = new UserPortfolioData(sectors);
 
                 populateSummaryTable(stockTokens);
                 getSectorsWithPrices(jsonResponse, stockTokens);
@@ -205,6 +214,7 @@ function getSectorByName(data, sectorName) {
         function(data){ return data.sectorName === sectorName }
     );
 }
+
 
 
 
