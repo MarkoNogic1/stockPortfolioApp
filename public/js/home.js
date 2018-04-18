@@ -38,10 +38,19 @@ getUserPortfolioData()
 //=====================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CALLED FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //=====================================================================================================================
+$(document).ready(function() {
+    $("#portfolioBubble").click(function () {
+        $(".panel-background").removeClass("selected");
+        $("#portfolioBubble").addClass("selected");
+        $("#summaryPanelHeading").html("<i class=\"fa fa-list-alt fa-fw\"></i>All Sectors");
+        populateSummaryTable(stockTokens);
+    });
+});
+
 function generateSectorBubbles(sectorsWithPrices){
     for (var sector in sectorsWithPrices) {
-        var bubble = $("<div></div>").addClass("col-lg-3 col-md-6");
-        var panel = $("<div></div>").addClass("panel");
+        var bubble = $("<div></div>").addClass("col-md-3");
+        var panel = $("<div></div>").addClass("panel panel-background");
         var panelHeading = $("<div></div>").addClass("panel-heading");
         var row = $("<div></div>").addClass("row");
         var symbolCol = $("<div></div>").addClass("col-xs-3");
@@ -76,15 +85,16 @@ function generateSectorBubbles(sectorsWithPrices){
         bubbles[i].addEventListener("click", function (e) {
             var sectorName = $(this).find(".sectorLabel")[0].innerText;
 
-            console.log(userData);
+            $(".panel-background").removeClass("selected");
+            $(this).find(".panel-background").addClass("selected");
+            $("#summaryPanelHeading").html("<i class=\"fa fa-list-alt fa-fw\"></i>Sector: " + sectorName);
+
             for (var sectorIndex in userData.sectors){
                 if (userData.sectors[sectorIndex].sectorName === sectorName){
-                    console.log(userData.sectors[sectorIndex].stocks);
                     populateSummaryTable(userData.sectors[sectorIndex].stocks);
                     break;
                 }
             }
-            //populateSummaryTable(arrayColumn(getSectorByName(userData.sectors, sectorName)[0].stocks,"tokenName"));
         });
     }
 }
@@ -142,6 +152,8 @@ function getSectorsWithPrices(sectorData, stockTokens) {
 }
 
 function populateGraph(stockToken) {
+    $("#stockTrackerHeader").html("<i class=\"fa fa-bar-chart-o fa-fw\"></i>Stock Tracker: " + stockToken);
+
     var graphData = [['Date', 'Price']];
     var graphTimeSeries = TimeSeriesEnum.WEEKLY;
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
@@ -179,17 +191,13 @@ function getUserPortfolioData()
         var xhttp = new XMLHttpRequest();
         xhttp.responseType = 'json';
         xhttp.open("GET", "/getUserPortfolioData", true);
-
-
-
         xhttp.onload = function ()
         {
             if (this.readyState === 4 && this.status === 200)
             {
                 var jsonResponse = this.response;
-                //console.log(jsonResponse);
                 var sectors = [];
-                var stockTokens = ""; //for ALL sectors
+                stockTokens = ""; //for ALL sectors
 
                 for (var sector in jsonResponse){
                     stockTokens += jsonResponse[sector]["stocks"] + ",";
@@ -209,11 +217,6 @@ function getUserPortfolioData()
     });
 }
 
-function getSectorByName(data, sectorName) {
-    return data.filter(
-        function(data){ return data.sectorName === sectorName }
-    );
-}
 
 
 

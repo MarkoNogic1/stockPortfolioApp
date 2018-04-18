@@ -244,8 +244,7 @@ table.dataTable thead .sorting:after {
   border-width: 0px;
 }
 .selected {
-  border-color: #0c0c0c !important;
-  border-width: 4px !important;
+  opacity: .6 !important;
 }
 .panel-gray {
   border-color: #787473;
@@ -454,4 +453,7 @@ table.dataTable thead .sorting:after {
 #signInPanel{
   color: #fff !important;
   background-color: #434343 !important;
+}
+#portfolioBubble {
+  height: 97px !important;
 }
