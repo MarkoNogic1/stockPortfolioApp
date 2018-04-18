@@ -1,3 +1,6 @@
+//=====================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CLASSES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//=====================================================================================================================
 class UserPortfolioData{
     constructor(_sectors){
         this.sectors = _sectors;
@@ -12,32 +15,29 @@ class Sector{
 }
 
 class Stock{
-    constructor(_tokenName){
+    constructor(_tokenName, _tokenShares,_tokenSector, _tokenDate, _tokenValue){
         this.tokenName = _tokenName;
+        this.tokenShares = _tokenShares;
+        this.tokenSector = _tokenSector;
+        this.tokenDate = _tokenDate;
+        this.tokenValue = _tokenValue;
     }
 }
 
+//=====================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  OUTER FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//=====================================================================================================================
 google.charts.load('current', {'packages':['corechart', 'table']});
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
-var userData = getUserPortfolioData();
+var userData;
 var stockTokens = [];
-for (var i in userData.sectors){
-    for (var j in userData.sectors[i].stocks)
-        stockTokens.push(userData.sectors[i].stocks[j]["tokenName"]);
-}
 
-populateSummaryTable(stockTokens);
-getSectorsWithPrices();
+getUserPortfolioData()
 
-$(document).ready(function() {
-    $("#portfolioBubble").click(function () {
-        $(".panel-background").removeClass("selected");
-        $("#portfolioBubble").addClass("selected");
-        populateSummaryTable(stockTokens);
-    });
-});
-
+//=====================================================================================================================
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CALLED FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//=====================================================================================================================
 function generateSectorBubbles(sectorsWithPrices){
     for (var sector in sectorsWithPrices) {
         var bubble = $("<div></div>").addClass("col-lg-3 col-md-6");
@@ -50,7 +50,6 @@ function generateSectorBubbles(sectorsWithPrices){
         var sectorText = $("<div></div>").append(sectorsWithPrices[sector][0]).addClass("sectorLabel");
         var priceText = $("<div></div>").addClass("huge").append('$' + sectorsWithPrices[sector][1].toFixed(2));
 
-        panel.addClass("panel-background");
         if (sector % 3 == 0)
             panel.addClass("panel-green");
         else if (sector % 2 == 0)
@@ -75,10 +74,7 @@ function generateSectorBubbles(sectorsWithPrices){
     var bubbles = $(".bubble");
     for (var i = 0; i < bubbles.length; i++) {
         bubbles[i].addEventListener("click", function (e) {
-            $(".panel-background").removeClass("selected");
-            $(this).find(".panel-background").addClass("selected");
             var sectorName = $(this).find(".sectorLabel")[0].innerText;
-            $("#summaryPanelHeading").html("<i class=\"fa fa-list-alt fa-fw\"></i>Sector: " + sectorName);
             populateSummaryTable(arrayColumn(getSectorByName(userData.sectors, sectorName)[0].stocks,"tokenName"));
         });
     }
@@ -113,22 +109,21 @@ function populateSummaryTable(stockTokens) {
     });
 }
 
-function getSectorsWithPrices() {
+function getSectorsWithPrices(sectorData, stockTokens) {
     var timeSeries = TimeSeriesEnum.BATCH;
     var timeSeriesIndicator = getJsonTimeSeriesIndicator(timeSeries);
     var sectorsWithPrices = [];
 
     requestStockData(stockTokens, timeSeries).then(function (response) {
         var stockData = JSON.parse(response)[timeSeriesIndicator];
+        for (var i in sectorData) {
+            sectorsWithPrices.push([sectorData[i]["sectorname"], 0]);
+        }
 
-        for (var i in userData.sectors){
-            sectorsWithPrices.push([userData.sectors[i].sectorName, 0]);
-            var stocks = userData.sectors[i].stocks;
-
-            for (var tokenAPI in stockData) {
-                for (var tokenDB in stocks){
-                    if (stockData[tokenAPI]["1. symbol"] === stocks[tokenDB].tokenName)
-                        sectorsWithPrices[i][1] += parseFloat(stockData[tokenAPI]["2. price"]);
+        for (var tokenAPI in stockData) {
+            for (var sector in sectorData){
+                if (sectorData[sector]["stocks"].search(stockData[tokenAPI]["1. symbol"]) != -1){
+                    sectorsWithPrices[sector][1] += parseFloat(stockData[tokenAPI]["2. price"]);
                 }
             }
         }
@@ -138,8 +133,6 @@ function getSectorsWithPrices() {
 }
 
 function populateGraph(stockToken) {
-    $("#stockTrackerHeader").html("<i class=\"fa fa-bar-chart-o fa-fw\"></i>Stock Tracker: " + stockToken);
-
     var graphData = [['Date', 'Price']];
     var graphTimeSeries = TimeSeriesEnum.WEEKLY;
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
@@ -153,6 +146,7 @@ function populateGraph(stockToken) {
         var data = google.visualization.arrayToDataTable(graphData);
 
         var options = {
+            title: `${stockToken}: Price History`,
             legend: {position: 'bottom'},
             width: '100%',
             height: '100%',
@@ -169,44 +163,47 @@ function populateGraph(stockToken) {
     });
 }
 
-function getUserPortfolioData(){
-    var retailStocks = new Array();
-    var techStocks = new Array();
-    var commStocks = new Array();
+function getUserPortfolioData()
+{
+    return new Promise(function (resolve, reject)
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.responseType = 'json';
+        xhttp.open("GET", "/getUserPortfolioData", true);
 
-    retailStocks.push(new Stock("WAL"));
-    retailStocks.push(new Stock("LOW"));
-    techStocks.push(new Stock("AMD"));
-    techStocks.push(new Stock("FB"));
-    techStocks.push(new Stock("MSFT"));
-    commStocks.push(new Stock("T"));
 
-    var sectors = [new Sector("Retail", retailStocks), new Sector("Technology", techStocks), new Sector("Communication", commStocks)];
 
-    var data = new UserPortfolioData(sectors);
-    return data;
+        xhttp.onload = function ()
+        {
+            if (this.readyState === 4 && this.status === 200)
+            {
+                var jsonResponse = this.response;
+                //console.log(jsonResponse);
+                var sectors = [];
+                var stockTokens = ""; //for ALL sectors
+
+                for (var sector in jsonResponse){
+                    stockTokens += jsonResponse[sector]["stocks"] + ",";
+                    var stocks = jsonResponse[sector]["stocks"].split(",");
+                    var sector = new Sector(jsonResponse[sector]["sectorname"], stocks);
+                    sectors.push(sector);
+                }
+                stockTokens = stockTokens.split(",");
+                var userData = new UserPortfolioData(sectors);
+
+                populateSummaryTable(stockTokens);
+                getSectorsWithPrices(jsonResponse, stockTokens);
+            }
+
+        };
+        xhttp.send();
+    });
 }
 
 function getSectorByName(data, sectorName) {
     return data.filter(
         function(data){ return data.sectorName === sectorName }
     );
-}
-
-// credits: richard maloney 2006
-function getTintedColor(color, v) {
-    if (color.length >6) { color= color.substring(1,color.length)}
-    var rgb = parseInt(color, 16);
-    var r = Math.abs(((rgb >> 16) & 0xFF)+v); if (r>255) r=r-(r-255);
-    var g = Math.abs(((rgb >> 8) & 0xFF)+v); if (g>255) g=g-(g-255);
-    var b = Math.abs((rgb & 0xFF)+v); if (b>255) b=b-(b-255);
-    r = Number(r < 0 || isNaN(r)) ? 0 : ((r > 255) ? 255 : r).toString(16);
-    if (r.length == 1) r = '0' + r;
-    g = Number(g < 0 || isNaN(g)) ? 0 : ((g > 255) ? 255 : g).toString(16);
-    if (g.length == 1) g = '0' + g;
-    b = Number(b < 0 || isNaN(b)) ? 0 : ((b > 255) ? 255 : b).toString(16);
-    if (b.length == 1) b = '0' + b;
-    return "#" + r + g + b;
 }
 
 

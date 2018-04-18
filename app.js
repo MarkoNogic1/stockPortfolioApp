@@ -30,7 +30,7 @@ const DBtitle = 'csc490a'; //The name of the database as specified in the SQL do
 
 const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
 const DBuser = 'root'; //The user. Hopefully won't be root.
-const DBpassword = '1q@W3e$R'; //The login for the user, if there *is* one.
+const DBpassword = '1BeJammin'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
 const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
 
@@ -92,8 +92,8 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
     client.query(SQL, [euname, eemail, hasho], function (error, result) {
         if (error)
         {
-            console.log("Some Error");
-            console.log(error);
+            //console.log("Some Error");
+            //console.log(error);
             callback(error, null);
         }
     });
@@ -103,8 +103,8 @@ function database_entry(euname, eemail, efname, elname, epass, callback)
 
     client.query(SQL, [euname, efname, elname], function (error, result) {
         if (error) {
-            console.log("Some Error 2");
-            console.log(error);
+            //console.log("Some Error 2");
+            //console.log(error);
             callback(error, null);
         }
         else
@@ -145,14 +145,14 @@ function database_check(cuname, cpass, callback)
             //Does User Exist?
             if (row && row.length )
             {
-                console.log('Case row was found!');
+                //console.log('Case row was found!');
                 // do something with your row variable
 
                 //Does given password match stored password?
                 if (bcrypt.compareSync(cpass, String(row[0].pass)))
                 {
                     //Then It's Okay.
-                    console.log(row[0].username);
+                    //console.log(row[0].username);
 
                     var data_return = [row[0].username, row[0].email];
 
@@ -160,14 +160,14 @@ function database_check(cuname, cpass, callback)
                 }
                 else
                 {
-                    console.log('Bad Password. :c');
+                    //console.log('Bad Password. :c');
                     callback(true,null);
                 }
 
             }
             else
             {
-                console.log('No case row was found :( !');
+                //console.log('No case row was found :( !');
                 callback(true,null);
             }
         }
@@ -242,14 +242,38 @@ app.get("/getPortfolioData", function(req, res){
 
     //After the query, whatever we get back will be send. We'll sort it out back home.
     client.query(SQL, [LOCALusern], function (err, row){
-        console.log(row);
         var senback = row;
-        console.log("Post JSON. Does it work.");
-        console.log(senback);
         res.send(senback);
         client.end();
     });
 });
+
+app.get("/getSectors", function(req, res){
+    //req.session.reload();
+    var username = req.session.uname;
+    var response;
+
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "SELECT DISTINCT sectorname FROM Stocks WHERE username = ?";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [username], function (err, row){
+        response = row;
+        res.send(response);
+        client.end();
+    });
+});
+
 
 //===================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% REGISTER AREA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -287,7 +311,7 @@ app.post('/login', function(req, res, next){
     database_check(user, pass, function(err,data){
         if (!err)
         {
-            console.log(data[0]);
+            //console.log(data[0]);
             //var cook = "user="+String(data[0])+";";
             //var cook2 = "email="+String(data[1])+";";
             //var cookfull = cook + cook2;
@@ -320,7 +344,7 @@ app.post('/addstock', function(req, res, next) {
     //++ FORM DATA ++
     var name = String(req.body.StockName);
     var SNumer = String(req.body.ShareNumber);
-    var SecNumer = String(req.body.SectorNumber);
+    var SecName = String(req.body.SectorName);
     var DateA = String(req.body.DateAquired);
     var SValue = String(req.body.StockValue);
 
@@ -341,9 +365,9 @@ app.post('/addstock', function(req, res, next) {
     //Here we just put in the stuff.
     client.connect(function (err) {if (err) throw err;});
 
-    var SQL = "INSERT INTO Stocks SET username = ?, stockname = ?, sharesnumber = ?, sectornumber = ?, dateaquired = ?, stockvalue = ?";
+    var SQL = "INSERT INTO Stocks SET username = ?, stockname = ?, sharesnumber = ?, sectorname = ?, dateaquired = ?, stockvalue = ?";
 
-    client.query(SQL, [LOCALusern, name, SNumer, SecNumer, DateA, SValue], function (err, row){});
+    client.query(SQL, [LOCALusern, name, SNumer, SecName, DateA, SValue], function (err, row){});
 
     client.end();
 
@@ -430,3 +454,56 @@ app.post('/editstock', function(req, res, next){
 
 
 });
+
+
+app.post("/getStocksBySector", function(req, res, next){
+    //req.session.reload();
+    var username = req.session.uname;
+    var sectorName = req.body.sectorName;
+
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "SELECT stockname FROM Stocks WHERE username = ? AND sectorname = ?";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [username, sectorName], function (err, row){
+        response = row;
+        res.send(response);
+        client.end();
+    });
+});
+
+app.get("/getUserPortfolioData", function(req, res){
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+    //Here we need to send the string back.
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "SELECT sectorname, GROUP_CONCAT(stockname) as stocks FROM Stocks WHERE username = ? GROUP BY sectorname";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [LOCALusern], function (err, row){
+        //console.log(row);
+        res.send(row);
+        client.end();
+    });
+});
+
