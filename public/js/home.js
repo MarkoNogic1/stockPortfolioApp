@@ -27,13 +27,14 @@ class Stock{
 //=====================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  OUTER FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //=====================================================================================================================
-google.charts.load('current', {'packages':['corechart', 'table']});
+//google.charts.load('current', {'packages':['corechart', 'table']});
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
 var userData;
 var stockTokens = [];
+var summaryData = [['Stock Token', 'Current Value']];
 
-getUserPortfolioData()
+getUserPortfolioData();
 
 //=====================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CALLED FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,7 +92,7 @@ function generateSectorBubbles(sectorsWithPrices){
 
             for (var sectorIndex in userData.sectors){
                 if (userData.sectors[sectorIndex].sectorName === sectorName){
-                    populateSummaryTable(userData.sectors[sectorIndex].stocks);
+                    repopulateSummaryTable(userData.sectors[sectorIndex].stocks);
                     break;
                 }
             }
@@ -99,8 +100,31 @@ function generateSectorBubbles(sectorsWithPrices){
     }
 }
 
+function repopulateSummaryTable(stockTokens){
+    var sectorSummaryData = [['Stock Token', 'Current Value']];
+    for (var i = 1; i < summaryData.length; i++){
+        if (stockTokens.indexOf(summaryData[i][0]) !== -1){
+            sectorSummaryData.push(summaryData[i]);
+        }
+    }
+    var data = google.visualization.arrayToDataTable(sectorSummaryData);
+
+    var table = new google.visualization.Table(document.getElementById('table'));
+
+    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+
+    google.visualization.events.addListener(table, 'select', tableRowClick);
+
+    populateGraph(stockTokens[0]);
+
+    function tableRowClick(){
+        var selectedRow = table.getSelection()[0].row;
+        var selectedToken = summaryData[selectedRow + 1][0];
+        populateGraph(selectedToken);
+    }
+}
+
 function populateSummaryTable(stockTokens) {
-    var summaryData = [['Stock Token', 'Current Value']];
     var summaryTimeSeries = TimeSeriesEnum.BATCH;
     var summaryTimeSeriesIndicator = getJsonTimeSeriesIndicator(summaryTimeSeries);
     requestStockData(stockTokens, summaryTimeSeries).then(function (response) {
@@ -128,6 +152,7 @@ function populateSummaryTable(stockTokens) {
     });
 }
 
+
 function getSectorsWithPrices(sectorData, stockTokens) {
     var timeSeries = TimeSeriesEnum.BATCH;
     var timeSeriesIndicator = getJsonTimeSeriesIndicator(timeSeries);
@@ -135,6 +160,7 @@ function getSectorsWithPrices(sectorData, stockTokens) {
 
     requestStockData(stockTokens, timeSeries).then(function (response) {
         var stockData = JSON.parse(response)[timeSeriesIndicator];
+
         for (var i in sectorData) {
             sectorsWithPrices.push([sectorData[i]["sectorname"], 0]);
         }
@@ -155,10 +181,12 @@ function populateGraph(stockToken) {
     $("#stockTrackerHeader").html("<i class=\"fa fa-bar-chart-o fa-fw\"></i>Stock Tracker: " + stockToken);
 
     var graphData = [['Date', 'Price']];
-    var graphTimeSeries = TimeSeriesEnum.WEEKLY;
+    var graphTimeSeries = TimeSeriesEnum.MONTHLY;
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
     requestStockData(stockToken, graphTimeSeries).then(function (response) {
         var stockData = JSON.parse(response);
+        if (stockData.hasOwnProperty("Information"))
+            alert("Data returned: " + response);
 
         for (var key in stockData[graphTimeSeriesIndicator]) {
             graphData.push([key, parseFloat(stockData[graphTimeSeriesIndicator][key]["1. open"])]);
