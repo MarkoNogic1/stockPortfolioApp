@@ -8,6 +8,11 @@ xhttp.onreadystatechange = function() {
 
         document.getElementById("displayname").innerHTML = values[0];
         document.getElementById("displayemail").innerHTML = values[1];
+
+        document.getElementById("SETTINGusername").innerHTML = "Username: " + values[0];
+        document.getElementById("SETTINGemail").innerHTML = "Email: " + values[1];
+        document.getElementById("SETTINGfirstname").innerHTML = "First Name: " + values[2];
+        document.getElementById("SETTINGlastname").innerHTML = "Last Name: " + values[3];
     }
 };
 

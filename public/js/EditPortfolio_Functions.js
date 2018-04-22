@@ -1,12 +1,27 @@
 
 function submit_ADD()
 {
-    valid = true;
-    //INSERT STUFF HERE FOR CHECKING VALUES
+    var stockname = String(document.getElementsByName("StockName")[0].value);
+
+    requestStockData(stockname, TimeSeriesEnum.Batch).then(function(Dummy){
+        if(Dummy.length > 152)
+        {
+            document.getElementById('addStockForm').submit();
+        }
+        else
+        {
+            alert("Stock Name Must be Valid");
+        }
+
+    })
+        .catch(function(error){
+            alert("Stock Name Must be Valid");
+        });
+    /*
     if(valid)
     {
         document.getElementById('addStockForm').submit();
-    }
+    }*/
 
 }
 
