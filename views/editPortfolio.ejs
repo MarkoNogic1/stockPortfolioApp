@@ -37,7 +37,9 @@
 <body>
 <!-- SCRIPTS -->
 <script src="/js/EditPortfolio_Functions.js"></script>
+<script src="/dist/js/stockDataRequester.js"></script>
 <!-- SCRIPTS -->
+    <%include navMenu%>
 
     <div id="wrapper">
         <!-- Navigation -->
@@ -95,13 +97,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label>Select a Sector</label>
-                                            <select class="form-control" name="SectorNumber" id="SectorNumber">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                            </select>
+                                            <label>Specify a Sector</label>
+                                            <input class="form-control" name="SectorName" id="SectorName">
                                         </div>
 
                                         <div class="form-group">

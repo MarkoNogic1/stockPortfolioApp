@@ -97,6 +97,10 @@
     </div>
     <!-- /.navbar-static-side -->
 
+
+
+
+    <!-- HERE IT IS -->
     <!-- Account Info Popup -->
     <div class="modal fade" id="userProfile" tabindex="-1" role="dialog" aria-labelledby="userProfileLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -108,31 +112,33 @@
                 <div class="modal-body">
                     <div class="form">
                         <div class="form-group">
-                            <label>Username</label>
+                            <label id="SETTINGusername">Username</label>
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
+                            <label id="SETTINGemail">Email</label>
                         </div>
                         <div class="form-group">
-                            <label>First Name</label>
+                            <label id="SETTINGfirstname">First Name</label>
                         </div>
                         <div class="form-group">
-                            <label>Last Name</label>
+                            <label id="SETTINGlastname">Last Name</label>
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <a class="btn btn-link" href="/editUser">Change User Information</a>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Save changes</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+
+
 
     <!-- Settings Popup -->
     <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
