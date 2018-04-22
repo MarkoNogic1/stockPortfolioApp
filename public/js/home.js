@@ -118,8 +118,9 @@ function repopulateSummaryTable(stockTokens){
     populateGraph(stockTokens[0]);
 
     function tableRowClick(){
+        console.log(sectorSummaryData[table.getSelection()[0].row + 1]);
         var selectedRow = table.getSelection()[0].row;
-        var selectedToken = summaryData[selectedRow + 1][0];
+        var selectedToken = sectorSummaryData[selectedRow + 1][0];
         populateGraph(selectedToken);
     }
 }
