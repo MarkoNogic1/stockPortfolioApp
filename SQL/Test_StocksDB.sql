@@ -27,7 +27,7 @@ CREATE TABLE Stocks(
 	username varchar(45) NOT NULL,
     stockname varchar(45) NOT NULL,
     sharesnumber varchar(45) NOT NULL,
-    sectornumber varchar(45) NOT NULL,
+    sectorname varchar(45) NOT NULL,
     dateaquired varchar(45) NOT NULL,
     stockvalue varchar(45) NOT NULL
     
