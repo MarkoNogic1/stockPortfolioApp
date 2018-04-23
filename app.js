@@ -30,7 +30,7 @@ const DBtitle = 'csc490a'; //The name of the database as specified in the SQL do
 
 const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
 const DBuser = 'root'; //The user. Hopefully won't be root.
-const DBpassword = '1q@W3e$R'; //The login for the user, if there *is* one.
+const DBpassword = 'pass'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
 const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
 
