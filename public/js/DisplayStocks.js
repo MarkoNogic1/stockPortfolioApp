@@ -54,8 +54,6 @@ function myFunction()
 
 }
 
-
-
 /*
 HERE IS THE FORMATTING
 */
@@ -72,10 +70,39 @@ function formatResponse(resp)
     // sector = newform[3];
     // dataAcquired = newform[4];
     //We don't need iD for the stock
-    finalform.push(firform[index].stockname, firform[index].sharesnumber, firform[index].sectornumber, firform[index].dateaquired, firform[index].stockvalue);
+    finalform.push(firform[index].stockname, firform[index].sharesnumber, firform[index].sectorname, firform[index].dateaquired, firform[index].stockvalue);
     result.push(finalform);
   }
   return result;
 }
 
 myFunction();
+
+window.onload = function genLinks(){
+  var refTable = document.getElementById('stockinfo');
+  stocklinkssection = document.createElement('div');
+  stocklinkssection.className = "col-lg-12";
+
+  theheader = document.createElement('h1');
+  theheader.className = "page-header";
+  theheader.innerHTML = "Stock Links";
+  stocklinkssection.appendChild(theheader);
+
+  //alert(document.getElementById('stockinfo').rows.length);
+  for (var i = 1; i < refTable.rows.length; i++)
+  {
+    //gets cells of current row
+   var oCells = refTable.rows.item(i).cells;
+
+   a = document.createElement('a');
+   a.href = "https://www.google.com/search?q=stock+" + oCells[0].innerHTML;
+   a.innerHTML = oCells[0].innerHTML;
+
+   newp = document.createElement('p');
+   newp.appendChild(a);
+
+   stocklinkssection.appendChild(newp);
+
+  }
+  document.getElementById('rowdiv').appendChild(stocklinkssection);
+}
