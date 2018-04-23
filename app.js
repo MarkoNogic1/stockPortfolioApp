@@ -30,7 +30,7 @@ const DBtitle = 'csc490a'; //The name of the database as specified in the SQL do
 
 const DBhostname = 'localhost'; //The host name. Certainly won't be local host.
 const DBuser = 'root'; //The user. Hopefully won't be root.
-const DBpassword = 'pass'; //The login for the user, if there *is* one.
+const DBpassword = '1q@W3e$R'; //The login for the user, if there *is* one.
 const DBportNumber = 3306; //The port to connect from, default is 3306
 const DBtitle = 'Test_StocksDB'; //The name of the database as specified in the SQL document.
 
@@ -482,11 +482,21 @@ app.post('/addstock', function(req, res, next) {
 
     var SQL = "INSERT INTO Stocks SET username = ?, stockname = ?, sharesnumber = ?, sectorname = ?, dateaquired = ?, stockvalue = ?";
 
-    client.query(SQL, [LOCALusern, name, SNumer, SecName, DateA, SValue], function (err, row){});
+    client.query(SQL, [LOCALusern, name, SNumer, SecName, DateA, SValue], function (err, row){
+
+        if(!err)
+        {
+            res.redirect('/home');
+        }
+        else
+        {
+            console.log(err)
+        }
+
+    });
 
     client.end();
 
-    res.redirect('/home');
 });
 
 //===================================================================================================================
