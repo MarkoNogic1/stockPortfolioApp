@@ -559,7 +559,7 @@ app.post('/editstock', function(req, res, next){
 
     client.connect(function(err){if (err) throw err;});
 
-    var SQL = "UPDATE Stocks SET sharesnumber = ?, sectornumber = ?, dateaquired = ?, stockvalue = ? WHERE username = ? AND stockname = ?";
+    var SQL = "UPDATE Stocks SET sharesnumber = ?, sectorname = ?, dateaquired = ?, stockvalue = ? WHERE username = ? AND stockname = ?";
 
     client.query(SQL, [StockShares, StockSector, StockDate, StockValue, LOCALusern, StockName], function (err, row){
 
@@ -621,4 +621,3 @@ app.get("/getUserPortfolioData", function(req, res){
         client.end();
     });
 });
-

@@ -30,7 +30,9 @@ function myFunction()
                     var dateCell = newRow.insertCell(3);
                     var valueCell = newRow.insertCell(4);
 
-                    var nameInfo = document.createTextNode(answer[i][0]);
+                    var nameInfo = document.createElement('a');
+                    nameInfo.href = "https://www.google.com/search?q=stock+" + answer[i][0];
+                    nameInfo.innerHTML = answer[i][0];
                     var numInfo = document.createTextNode(answer[i][1]);
                     var secInfo = document.createTextNode(answer[i][2]);
                     var dateInfo = document.createTextNode(answer[i][3]);
@@ -72,7 +74,7 @@ function formatResponse(resp)
     // sector = newform[3];
     // dataAcquired = newform[4];
     //We don't need iD for the stock
-    finalform.push(firform[index].stockname, firform[index].sharesnumber, firform[index].sectornumber, firform[index].dateaquired, firform[index].stockvalue);
+    finalform.push(firform[index].stockname, firform[index].sharesnumber, firform[index].sectorname, firform[index].dateaquired, firform[index].stockvalue);
     result.push(finalform);
   }
   return result;
