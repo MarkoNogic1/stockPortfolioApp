@@ -482,18 +482,7 @@ app.post('/addstock', function(req, res, next) {
 
     var SQL = "INSERT INTO Stocks SET username = ?, stockname = ?, sharesnumber = ?, sectorname = ?, dateaquired = ?, stockvalue = ?";
 
-    client.query(SQL, [LOCALusern, name, SNumer, SecName, DateA, SValue], function (err, row){
-
-        if(!err)
-        {
-            res.redirect('/home');
-        }
-        else
-        {
-            console.log(err)
-        }
-
-    });
+    client.query(SQL, [LOCALusern, name, SNumer, SecName, DateA, SValue], function (err, row){});
 
     client.end();
 
