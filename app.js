@@ -256,6 +256,10 @@ function database_check(cuname, cpass, callback)
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PAGE GETS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //===================================================================================================================
 app.get("/", function(req,res){
+    res.render("landing.ejs");
+});
+
+app.get("/login", function(req,res){
     res.render("login.ejs");
 });
 
