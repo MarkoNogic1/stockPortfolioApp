@@ -87,21 +87,3 @@
 	Given I have logged in
 	When I check my stored cookies
 	The cookies used by sessions should be encrypted
-	
-#LANDING PAGE TESTS
-#46-
-	Given I have started the application
-	When I navigate to localhost:3000
-	Then I am greeted with a landing page
-#47-
-	Given I am on the landing page of the application
-	When I click the register today button
-	Then I am redirected to the registration page
-#48-
-	Given I am on the landing page of the application
-	When I click the sign in button
-	Then I am redirected to the sign in page
-#49-
-	Given I am on the landing page of the application
-	When I click the sign up button
-	Then I am redirected to the registration page
