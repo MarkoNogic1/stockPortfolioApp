@@ -1,0 +1,95 @@
+#LANDING PAGE TESTS
+#46-
+	Given I have started the application
+	When I navigate to localhost:3000
+	Then I am greeted with a landing page
+
+#47-
+	Given I am on the landing page of the application
+	When I click the register today button
+	Then I am redirected to the registration page
+
+#48-
+	Given I am on the landing page of the application
+	When I click the sign in button
+	Then I am redirected to the sign in page
+
+#49-
+	Given I am on the landing page of the application
+	When I click the sign up button
+	Then I am redirected to the registration page
+
+
+#VALIDATION TESTS
+#50-
+	Given I am on the add stocks tab and have inputted a name for the stock the API will not recognize
+	When I invoke the “Submit Stock” function
+	The submission should fail with and error and stay on the add stock page
+
+#51-
+	Given I am on the add stocks tab and have inputted a name for the stock the API will	recognize
+	When I invoke the “Submit Stock” function
+	The submission should succeed and the stock should be added to the database, the     page should redirect to the home page and the stock should be viewable in the homepage
+
+#USER DISPLAY TESTS
+#52-
+	Given I am on any page with the Navbar and have activated the user menu
+	When I activate the function to bring up the user profile
+	The user profile frame should display all information about the currently logged in user
+
+
+#53-
+	Given I have brought down the user profile frame
+	When I invoke the cancel function
+	The frame should cancel out and return to the normal home page view
+
+#54-
+	Given I have brought down the user profile frame
+	When  I invoke the function to change to the edit user page
+	The page should redirect to the edit user page
+
+#55-
+	Given I have logged in previously as a user
+	When I log in as a different user and bring up the user profile frame
+	The frame should show the user information only for the newly logged in user
+
+#EDIT USER PROFILE TESTS
+
+#56-
+	Given I have been redirected to the edit user profile page
+	When the page loads
+	All entry forms should be filled with the corresponding data for the currently logged in user.
+
+#57-
+	Given the edit user profile page and I have edited the values in one or more fields
+	When I invoke the submit function
+	The currently logged in user’s information should change to match.
+
+#VIEW STOCKS TESTS
+
+#58-
+	Given that the current user’s profile has stocks added to their portfolio and I am on the View stocks page
+	When I click the show stock links button
+	Hyperlinks to searches of stocks that the user owns should appear on the lower end of the page. 
+
+#59-
+	Given that the user is on the edit portfolio page and the user removes one of their stocks
+	When they go to the view stocks page and click the view stocks button
+	The removed stock should no longer show up as a hyperlink on the page. 
+
+#VIEW SECTOR TESTS
+
+#60
+	Given that the user has logged in 
+	When the user navigates to the ‘View Sector’ page
+	The dropdown at the top of the page should populate all of the sectors associated with the account
+
+#HOME PAGE TESTS
+
+#61
+
+	Given that the user has logged in
+	When the home page loads
+	Sector and Stock data associated with that user should populate in the sector bubbles, table, and graph
+
+
