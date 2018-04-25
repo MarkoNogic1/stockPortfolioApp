@@ -76,7 +76,7 @@ function populateSummaryTable(sector) {
             var summaryData = [['Stock Token', 'Current Value']];
             for (var stockIndex in jsonResponse){
                 if (sector === undefined || sector === jsonResponse[stockIndex]["sectorname"])
-                    summaryData.push([jsonResponse[stockIndex]["stockname"], jsonResponse[stockIndex]["stockvalue"]]);
+                    summaryData.push([jsonResponse[stockIndex]["stockname"], parseFloat(jsonResponse[stockIndex]["stockvalue"])]);
             }
             var data = google.visualization.arrayToDataTable(summaryData);
 
@@ -121,30 +121,37 @@ function populateGraph(stockToken) {
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
     requestStockData(stockToken, graphTimeSeries).then(function (response) {
         var stockData = JSON.parse(response);
-        if (stockData.hasOwnProperty("Information"))
-            alert("Data returned: " + response);
-
-        for (var key in stockData[graphTimeSeriesIndicator]) {
-            graphData.push([key, parseFloat(stockData[graphTimeSeriesIndicator][key]["1. open"])]);
+        if (stockData.hasOwnProperty("Information")) {
+            $('#chart').empty();
+            $('#chartError').html('Uh oh! Alpha Vantage API says: "' + stockData["Information"] + '". '+ "<br /><br />" + 'Please wait a few seconds and try again!');
         }
+        else {
+            $('#chartError').empty();
 
-        var data = google.visualization.arrayToDataTable(graphData);
+            for (var key in stockData[graphTimeSeriesIndicator]) {
+                graphData.push([key, parseFloat(stockData[graphTimeSeriesIndicator][key]["1. open"])]);
+            }
 
-        var options = {
-            title: `${stockToken}: Price History`,
-            legend: {position: 'bottom'},
-            width: '100%',
-            height: '100%',
-            vAxis: {
-                title: 'Price (USD)'},
-            hAxis: {
-                title: 'Date',
-                direction: '-1'}
-        };
+            var data = google.visualization.arrayToDataTable(graphData);
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart'));
+            var options = {
+                title: `${stockToken}: Price History`,
+                legend: {position: 'bottom'},
+                width: '100%',
+                height: '100%',
+                vAxis: {
+                    title: 'Price (USD)'
+                },
+                hAxis: {
+                    title: 'Date',
+                    direction: '-1'
+                }
+            };
 
-        chart.draw(data, options);
+            var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+            chart.draw(data, options);
+        }
     });
 }
 

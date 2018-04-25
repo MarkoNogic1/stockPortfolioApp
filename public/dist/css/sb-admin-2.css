@@ -457,3 +457,7 @@ table.dataTable thead .sorting:after {
 #portfolioBubble {
   height: 97px !important;
 }
+#chartError{
+  color: red;
+  alignment: center;
+}
