@@ -80,4 +80,6 @@ function formatResponse(resp)
   return result;
 }
 
+getUserPortfolioData();
+
 myFunction();

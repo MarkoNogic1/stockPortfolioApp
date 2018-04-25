@@ -1,3 +1,4 @@
+getUserPortfolioData();
 
 function submit_ADD()
 {
@@ -102,3 +103,9 @@ function addOptions()
     xhttp.send();
 
 }
+
+$(document).ready(function(){
+    $('#navTabs').click(function(){
+        getUserPortfolioData();
+    })
+});
