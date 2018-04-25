@@ -25,12 +25,19 @@
     <!-- jQuery -->
     <script src="/vendor/jquery/jquery.min.js"></script>
 
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+    {'modules':[{'name':'visualization','version':'1.1','packages':
+    ['corechart','table']}]}"></script>
+
+    <script src="https://envato.stammtec.de/themeforest/melon/plugins/flot/jquery.flot.min.js"></script>
+    <script src="https://envato.stammtec.de/themeforest/melon/plugins/flot/jquery.flot.pie.min.js"></script>
+    <script src="https://envato.stammtec.de/themeforest/melon/plugins/flot/jquery.flot.tooltip.min.js"></script>
+
     <!-- Stock Data Requester -->
-    <script src="dist/js/stockDataRequester.js"></script>
+    <script src="/js/stockDataRequester.js"></script>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+    <!-- DataStore Script -->
+    <script src="/js/dataStore.js"></script>
 
     <!-- Custom Home Page Script -->
     <script src="/js/viewSector.js"></script>
@@ -59,8 +66,9 @@
                     <div class="col-12 panel">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label>Select a Sector</label>
+                                <label>View Sector:</label>
                                 <select id="sectorSelector" class="form-control">
+                                    <option value="default">Select a sector...</option>
                                 </select>
                             </div>
                         </div>
@@ -68,11 +76,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12">
-                        <div class="panel panel-default">
-                            <div id="graph"></div>
+                    <div class="col-lg-10">
+                        <div id="graph" class="panel panel-default">
+
                         </div>
                         <!-- /.panel -->
+                        <div id="piePlaceholder">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,7 +102,6 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
-
 </body>
 
 </html>

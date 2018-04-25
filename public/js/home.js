@@ -2,10 +2,10 @@
 //=====================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  OUTER FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //=====================================================================================================================
-//google.charts.load('current', {'packages':['corechart', 'table']});
-const arrayColumn = (arr, n) => arr.map(x => x[n]);
-
+//const arrayColumn = (arr, n) => arr.map(x => x[n]);
 getUserPortfolioData();
+getSectorsWithPrices();
+populateSummaryTable();
 
 //=====================================================================================================================
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CALLED FUNCTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -15,7 +15,7 @@ $(document).ready(function() {
         $(".panel-background").removeClass("selected");
         $("#portfolioBubble").addClass("selected");
         $("#summaryPanelHeading").html("<i class=\"fa fa-list-alt fa-fw\"></i>All Sectors");
-        populateSummaryTable(stockTokens);
+        populateSummaryTable();
     });
 });
 
@@ -61,99 +61,63 @@ function generateSectorBubbles(sectorsWithPrices){
             $(this).find(".panel-background").addClass("selected");
             $("#summaryPanelHeading").html("<i class=\"fa fa-list-alt fa-fw\"></i>Sector: " + sectorName);
 
-            for (var sectorIndex in userData.sectors){
-                if (userData.sectors[sectorIndex].sectorName === sectorName){
-                    repopulateSummaryTable(userData.sectors[sectorIndex].stocks);
-                    break;
-                }
-            }
+            populateSummaryTable(sectorName);
         });
     }
 }
 
-function repopulateSummaryTable(stockTokens){
-    var sectorSummaryData = [['Stock Token', 'Current Value']];
-    for (var i = 1; i < summaryData.length; i++){
-        if (stockTokens.indexOf(summaryData[i][0]) !== -1){
-            sectorSummaryData.push(summaryData[i]);
-        }
-    }
-    var data = google.visualization.arrayToDataTable(sectorSummaryData);
+function populateSummaryTable(sector) {
+    var http = new XMLHttpRequest();
+    http.open("GET", "/getSummaryData");
+    http.send();
+    http.onload = function() {
+        if (this.readyState === 4 && this.status === 200){
+            var jsonResponse = JSON.parse(this.response);
+            var summaryData = [['Stock Token', 'Current Value']];
+            for (var stockIndex in jsonResponse){
+                if (sector === undefined || sector === jsonResponse[stockIndex]["sectorname"])
+                    summaryData.push([jsonResponse[stockIndex]["stockname"], jsonResponse[stockIndex]["stockvalue"]]);
+            }
+            var data = google.visualization.arrayToDataTable(summaryData);
 
-    var table = new google.visualization.Table(document.getElementById('table'));
+            var table = new google.visualization.Table(document.getElementById('table'));
 
-    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+            table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
 
-    google.visualization.events.addListener(table, 'select', tableRowClick);
+            google.visualization.events.addListener(table, 'select', tableRowClick);
 
-    populateGraph(stockTokens[0]);
+            populateGraph(summaryData[1][0]);
 
-    function tableRowClick(){
-        console.log(sectorSummaryData[table.getSelection()[0].row + 1]);
-        var selectedRow = table.getSelection()[0].row;
-        var selectedToken = sectorSummaryData[selectedRow + 1][0];
-        populateGraph(selectedToken);
-    }
-}
-
-function populateSummaryTable(stockTokens) {
-    var summaryTimeSeries = TimeSeriesEnum.BATCH;
-    var summaryTimeSeriesIndicator = getJsonTimeSeriesIndicator(summaryTimeSeries);
-    requestStockData(stockTokens, summaryTimeSeries).then(function (response) {
-        var stockData = JSON.parse(response);
-
-        for (var key in stockData[summaryTimeSeriesIndicator]) {
-            summaryData.push([stockData[summaryTimeSeriesIndicator][key]["1. symbol"], parseFloat(stockData[summaryTimeSeriesIndicator][key]["2. price"])]);
-        }
-
-        var data = google.visualization.arrayToDataTable(summaryData);
-
-        var table = new google.visualization.Table(document.getElementById('table'));
-
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-
-        google.visualization.events.addListener(table, 'select', tableRowClick);
-
-        populateGraph(stockTokens[0]);
-
-        function tableRowClick(){
-            var selectedRow = table.getSelection()[0].row;
-            var selectedToken = summaryData[selectedRow + 1][0];
-            populateGraph(selectedToken);
-        }
-    });
-}
-
-
-function getSectorsWithPrices(sectorData, stockTokens) {
-    var timeSeries = TimeSeriesEnum.BATCH;
-    var timeSeriesIndicator = getJsonTimeSeriesIndicator(timeSeries);
-    var sectorsWithPrices = [];
-
-    requestStockData(stockTokens, timeSeries).then(function (response) {
-        var stockData = JSON.parse(response)[timeSeriesIndicator];
-
-        for (var i in sectorData) {
-            sectorsWithPrices.push([sectorData[i]["sectorname"], 0]);
-        }
-
-        for (var tokenAPI in stockData) {
-            for (var sectorIndex in sectorData){
-                if (sectorData[sectorIndex]["stocks"].search(stockData[tokenAPI]["1. symbol"]) !== -1){
-                    sectorsWithPrices[sectorIndex][1] += parseFloat(stockData[tokenAPI]["2. price"]);
-                }
+            function tableRowClick(){
+                var selectedRow = table.getSelection()[0].row;
+                var selectedToken = summaryData[selectedRow + 1][0];
+                populateGraph(selectedToken);
             }
         }
+    };
+}
 
-        generateSectorBubbles(sectorsWithPrices);
-    });
+function getSectorsWithPrices() {
+    var http = new XMLHttpRequest();
+    http.open("GET", "/getSectorsWithPrices");
+    http.send();
+    http.onload = function() {
+        if (this.readyState === 4 && this.status === 200){
+            var jsonResponse = JSON.parse(this.response);
+            var sectorsWithPrices = [];
+            for (var sector in jsonResponse){
+                sectorsWithPrices.push([jsonResponse[sector]["sectorname"],jsonResponse[sector]["price"]]);
+            }
+            generateSectorBubbles(sectorsWithPrices);
+        }
+    };
 }
 
 function populateGraph(stockToken) {
     $("#stockTrackerHeader").html("<i class=\"fa fa-bar-chart-o fa-fw\"></i>Stock Tracker: " + stockToken);
 
     var graphData = [['Date', 'Price']];
-    var graphTimeSeries = TimeSeriesEnum.MONTHLY;
+    var graphTimeSeries = TimeSeriesEnum.WEEKLY;
     var graphTimeSeriesIndicator = getJsonTimeSeriesIndicator(graphTimeSeries);
     requestStockData(stockToken, graphTimeSeries).then(function (response) {
         var stockData = JSON.parse(response);

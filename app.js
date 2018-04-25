@@ -507,3 +507,79 @@ app.get("/getUserPortfolioData", function(req, res){
     });
 });
 
+app.post("/updateStockValue", function(req, res, next){
+    //req.session.reload();
+    var username = req.session.uname;
+    var stockName = req.body.stockName;
+    var stockValue = req.body.stockValue;
+
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "UPDATE stocks SET stockvalue = ? WHERE username = ? AND stockname = ?";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [stockValue, username, stockName], function (err, row){
+        var response = row;
+        res.send(response);
+        client.end();
+    });
+});
+
+app.get("/getSectorsWithPrices", function(req, res){
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+    //Here we need to send the string back.
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "select sectorname, TRUNCATE(SUM(stockvalue),2) as price from stocks where username = ? group by sectorname;";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [LOCALusern], function (err, row){
+        //console.log(row);
+        res.send(row);
+        client.end();
+    });
+});
+
+app.get("/getSummaryData", function(req, res){
+    var SessData = req.session;
+    var LOCALusern = String(SessData.uname);
+    //Here we need to send the string back.
+    var client  = mysql.createConnection({
+        host: DBhostname,
+        user: DBuser,
+        password: DBpassword,
+        port: DBportNumber,
+        database: DBtitle
+    });
+
+    client.connect(function(err){if (err) throw err;});
+
+    //BUILD THE SQL STATEMENT
+    var SQL = "select stockname, stockvalue, sectorname from stocks where username = ?";
+
+    //After the query, whatever we get back will be send. We'll sort it out back home.
+    client.query(SQL, [LOCALusern], function (err, row){
+        //console.log(row);
+        res.send(row);
+        client.end();
+    });
+});

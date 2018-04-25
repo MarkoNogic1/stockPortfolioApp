@@ -10,7 +10,10 @@ class UserPortfolioData{
 class Sector{
     constructor(_sectorName, _stocks){
         this.sectorName = _sectorName;
-        this.stocks = _stocks;
+        this.stocks = [];
+        for (var stockIndex in _stocks){
+            this.stocks.push(new Stock(_stocks[stockIndex],0,0,0,0));
+        }
     }
 }
 
@@ -23,27 +26,27 @@ class Stock{
         this.tokenValue = _tokenValue;
     }
 }
-
-var userData;
+//-------------- User Data Variables -----------------------------------
+var userData = undefined;
 var stockTokens = [];
-var summaryData = [['Stock Token', 'Current Value']];
 
-function getUserPortfolioData()
-{
-    return new Promise(function (resolve, reject)
-    {
+
+//This function pulls the user's data from the database,
+//hits the Alpha Vantage API for the values,
+//then loads the values back into the database
+function getUserPortfolioData() {
+    return new Promise(function (resolve, reject) {
         var xhttp = new XMLHttpRequest();
         xhttp.responseType = 'json';
         xhttp.open("GET", "/getUserPortfolioData", true);
-        xhttp.onload = function ()
-        {
-            if (this.readyState === 4 && this.status === 200)
-            {
+        xhttp.onload = function () {
+            if (this.readyState === 4 && this.status === 200) {
                 var jsonResponse = this.response;
+
                 var sectors = [];
                 stockTokens = ""; //for ALL sectors
 
-                for (var sector in jsonResponse){
+                for (var sector in jsonResponse) {
                     stockTokens += jsonResponse[sector]["stocks"] + ",";
                     var stocks = jsonResponse[sector]["stocks"].split(",");
                     var sector = new Sector(jsonResponse[sector]["sectorname"], stocks);
@@ -52,10 +55,23 @@ function getUserPortfolioData()
                 stockTokens = stockTokens.split(",");
                 userData = new UserPortfolioData(sectors);
 
-                populateSummaryTable(stockTokens);
-                getSectorsWithPrices(jsonResponse, stockTokens);
-            }
+                var summaryTimeSeries = TimeSeriesEnum.BATCH;
+                var summaryTimeSeriesIndicator = getJsonTimeSeriesIndicator(summaryTimeSeries);
+                requestStockData(stockTokens, summaryTimeSeries).then(function(response){
+                    var stockData = JSON.parse(response);
 
+                    /*for (var key in stockData[summaryTimeSeriesIndicator]) {
+                        summaryData.push([stockData[summaryTimeSeriesIndicator][key]["1. symbol"], parseFloat(stockData[summaryTimeSeriesIndicator][key]["2. price"])]);
+                    }*/
+                    for (var key in stockData[summaryTimeSeriesIndicator]) {
+                        var http = new XMLHttpRequest();
+                        http.open("POST", "/updateStockValue");
+                        http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        const body = '{"stockName":"'+stockData[summaryTimeSeriesIndicator][key]["1. symbol"] + '", "stockValue":"' + parseFloat(stockData[summaryTimeSeriesIndicator][key]["2. price"]).toFixed(2) + '"}';
+                        http.send(body);
+                    }
+                });
+            }
         };
         xhttp.send();
     });
