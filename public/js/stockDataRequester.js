@@ -6,7 +6,8 @@ var TimeSeriesEnum = {
     BATCH: 5
 };
 
-const API_KEY = "YGFY7TCSV5V6I7JN";
+var CURR_API_KEY = 0;
+const API_KEYS = ["YGFY7TCSV5V6I7JN", "8WUGR6VXTZVKXO6I", "2SWO9QE98C0A7RC9", "W8LAI1WL3EFOXDCJ"];
 
 function requestStockData(stockTokens, timeSeries){
     var timeSeriesToken;
@@ -43,15 +44,16 @@ function requestStockData(stockTokens, timeSeries){
         symbolOrSymbols = "symbol";
     }
 
-    var url = "https://www.alphavantage.co/query?function=${timeSeriesToken}&${symbolOrSymbols}=${stockTokenString}&apikey=${API_KEY}";
+    var url = `https://www.alphavantage.co/query?function=${timeSeriesToken}&${symbolOrSymbols}=${stockTokenString}&apikey=${API_KEYS[CURR_API_KEY]}`;
+    CURR_API_KEY = ++CURR_API_KEY === API_KEYS.length ? 0 : CURR_API_KEY++;
 
     return new Promise((resolve, reject) => {
         var http = new XMLHttpRequest();
-    http.open("GET", url);
-    http.onload = () => resolve(http.responseText);
-    http.onerror = () => reject(http.statusText);
-    http.send();
-});
+        http.open("GET", url);
+        http.onload = () => resolve(http.responseText);
+        http.onerror = () => reject(http.statusText);
+        http.send();
+    });
 }
 
 function getJsonTimeSeriesIndicator(timeSeries){
@@ -71,3 +73,5 @@ function getJsonTimeSeriesIndicator(timeSeries){
             return "Time Series (Daily)";
     }
 }
+
+
