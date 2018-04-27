@@ -90,28 +90,34 @@
                                         <div class="form-group">
                                             <label>Stock to Add</label>
                                             <div class="form-group input-group">
-                                                <input type="text" class="form-control" name="StockName" id="StockName">
+                                                <input type="text" class="form-control" name="StockName" id="StockName" size="15">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Amount of Shares</label>
-                                            <input class="form-control" name="ShareNumber" id="ShareNumber">
+                                            <div class="form-group input-group">
+                                                <input class="form-control" name="ShareNumber" id="ShareNumber" size="15">
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Specify a Sector</label>
-                                            <input class="form-control" name="SectorName" id="SectorName">
+                                            <div class="form-group input-group">
+                                                <input list="SectorName" id="SectorNameList" name="SectorName" size="15" class="form-control">
+                                                <datalist id="SectorName" ></datalist>
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Date of Acquisition</label>
-                                            <input type="date" class="form-control" name="DateAquired" id="DateAquired">
+                                            <div class="form-group input-group">
+                                                <input type="date" class="form-control" name="DateAquired" id="DateAquired" size="15">
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label>Value of the Stock</label>
-                                            <input class="form-control" name="StockValue" id="StockValue">
+                                            <input class="form-control" name="StockValue" id="StockValue" type="hidden" value="0" size="15">
                                         </div>
 
                                         <div class="form-group">
@@ -136,8 +142,8 @@
                                             <label>Select Stock(s) to Remove</label>
                                         </div>
 
-                                        <div class="form-group">
-                                            <select multiple class="form-control" name="RemoveSelect" id="StockSelector1">
+                                        <div class="form-group input-group">
+                                            <select multiple class="form-control" name="RemoveSelect" id="StockSelector1" size="15">
                                             <!-- OPTIONS WILL BE ADDED DYNAMICALLY -->
                                             </select>
                                         </div>
@@ -161,34 +167,37 @@
                                     <form id="edit_form" action="/editstock" method="POST">
                                         <div class="form-group">
                                             <label>Select Stock to Edit</label>
-                                            <select class="form-control" name="EditSelect" id="StockSelector2">
+                                            <div class="form-group input-group">
+                                                <select class="form-control" name="EditSelect" id="StockSelector2" size="15"></select>
+                                            </div>
                                                 <!-- STUFF PUT HERE-->
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Edit Date of Acquisition</label>
-                                            <input type="date" class="form-control" name="EditDate">
+                                            <div class="form-group input-group">
+                                                <input type="date" class="form-control" name="EditDate" size="15">
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Edit Sector</label>
-                                            <select class="form-control" name="EditSector">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                            </select>
+                                            <div class="form-group input-group">
+                                                <input list="EditSector" name="EditSector" size="15" class="form-control">
+                                            </div>
+                                            <datalist id="EditSector" ></datalist>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Edit Amount of Shares</label>
-                                            <input class="form-control" name="EditShares">
+                                            <div class="form-group input-group">
+                                                <input class="form-control" name="EditShares" size="15">
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label>Edit The Value of the Stock</label>
-                                            <input class="form-control" name="EditValue" id="EditValue">
+                                            <input class="form-control" name="EditValue" id="EditValue" type="hidden" value="0" size="15">
                                         </div>
 
                                         <div class="form-group">
