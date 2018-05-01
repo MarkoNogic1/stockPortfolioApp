@@ -57,7 +57,7 @@ function submit()
     {
         if (splChars.indexOf(user.charAt(i)) !== -1)
         {
-            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%");
+            //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%");
             form_entry_error(1, 0, 0, 0);
             valid = false;
         }
@@ -81,7 +81,7 @@ function submit()
     {
         if (splChars.indexOf(firstname.charAt(i)) !== -1)
         {
-    		alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+    		//alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
     		form_entry_error(0, 0, 0, 1);
     		valid = false;
         }
@@ -98,7 +98,7 @@ function submit()
     {
         if (splChars.indexOf(lastname.charAt(i)) !== -1)
         {
-            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
             form_entry_error(0, 0, 0, 1);
             valid = false;
         }
@@ -115,7 +115,7 @@ function submit()
     {
         if (splChars.indexOf(password_temp.charAt(i)) !== -1)
         {
-            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
             form_entry_error(0, 0, 1, 0);
             valid = false;
         }
@@ -131,7 +131,7 @@ function submit()
     {
         if (splChars.indexOf(password_re.charAt(i)) !== -1)
         {
-            alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
+            //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%\\");
             form_entry_error(0, 0, 1, 0);
             valid = false;
         }
