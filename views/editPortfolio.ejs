@@ -88,10 +88,18 @@
                                     <form role="form" id="addStockForm" action="/addstock" method="POST">
 
                                         <div class="form-group">
+
                                             <label>Stock to Add</label>
-                                            <div class="form-group input-group">
-                                                <input type="text" class="form-control" name="StockName" id="StockName" size="15">
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading" id="stock_error" style="visibility: hidden;">Stock Name must be valid</div>
+                                                <div class="panel-body">
+                                                    <div class="form-group input-group">
+                                                        <input type="text" class="form-control" name="StockName" id="StockName" size="15">
+                                                    </div>
+                                                </div>
+
                                             </div>
+
                                         </div>
 
                                         <div class="form-group">
