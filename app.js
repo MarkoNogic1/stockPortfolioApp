@@ -693,7 +693,7 @@ app.get("/getSummaryData", function(req, res){
     client.connect(function(err){if (err) throw err;});
 
     //BUILD THE SQL STATEMENT
-    var SQL = "select stockname, stockvalue, sectorname from stocks where username = ?";
+    var SQL = "select stockname, stockvalue, sectorname, sharesnumber from stocks where username = ?";
 
     //After the query, whatever we get back will be send. We'll sort it out back home.
     client.query(SQL, [LOCALusern], function (err, row){

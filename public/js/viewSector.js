@@ -31,7 +31,7 @@ function populateSectorGraph(sectorName){
             var jsonResponse = JSON.parse(this.response);
             for (var stockIndex in jsonResponse){
                 if (sectorName === jsonResponse[stockIndex]["sectorname"])
-                    sectorGraphData.push([jsonResponse[stockIndex]["stockname"], parseFloat(jsonResponse[stockIndex]["stockvalue"])]);
+                    sectorGraphData.push([jsonResponse[stockIndex]["stockname"], parseFloat(jsonResponse[stockIndex]["stockvalue"]) * parseFloat(jsonResponse[stockIndex]["sharesnumber"])]);
             }
 
             var data = google.visualization.arrayToDataTable(sectorGraphData);
