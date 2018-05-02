@@ -70,6 +70,9 @@ function getUserPortfolioData() {
                         const body = '{"stockName":"'+stockData[summaryTimeSeriesIndicator][key]["1. symbol"] + '", "stockValue":"' + parseFloat(stockData[summaryTimeSeriesIndicator][key]["2. price"]).toFixed(2) + '"}';
                         http.send(body);
                     }
+
+                    getSectorsWithPrices();
+                    populateSummaryTable();
                 });
             }
         };
