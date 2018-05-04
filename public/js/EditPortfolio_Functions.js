@@ -6,7 +6,7 @@ function submit_ADD()
 {
     var stockname = String(document.getElementsByName("StockName")[0].value);
 
-    document.getElementById("stock_error").style.visibility="hidden";
+    $("#stock_error").hide();
 
     requestStockData(stockname, TimeSeriesEnum.Batch).then(function(Dummy){
         if(Dummy.length > 152)
@@ -61,12 +61,14 @@ function submit_ADD()
         }
         else
         {
-            document.getElementById("stock_error").style.visibility="visible";
+            $("#stock_error").show();
+            //document.getElementById("stock_error").style.visibility="visible";
         }
 
     })
         .catch(function(error){
-            document.getElementById("stock_error").style.visibility="visible";
+            $("#stock_error").show();
+            //document.getElementById("stock_error").style.visibility="visible";
         });
     /*
     if(valid)

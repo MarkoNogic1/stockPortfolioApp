@@ -53,15 +53,24 @@ function submit()
         valid = false;
     }
     var splChars = "*|,\":<>[]{}`\';()&$#%";
-    for (var i = 0; i < user.length; i++)
+    if(user !== undefined && user !== null && user !== "")
     {
-        if (splChars.indexOf(user.charAt(i)) !== -1)
+        for (var i = 0; i < user.length; i++)
         {
-            //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%");
-            form_entry_error(1, 0, 0, 0);
-            valid = false;
+            if (splChars.indexOf(user.charAt(i)) !== -1)
+            {
+                //alert ("Fields may not contain special characters *|,\":<>[]{}`\';()&$#%");
+                form_entry_error(1, 0, 0, 0);
+                valid = false;
+            }
         }
     }
+    else
+    {
+        form_entry_error(1, 0, 0, 0);
+        valid = false;
+    }
+
 
     //%%%%%%%%%%%% EMAIL SECTION %%%%%%%%%%%%
     if (email === null || email === ""  || !email.includes("@") || !email.includes("."))
@@ -165,32 +174,50 @@ function form_entry_error(username_error, email_error, password_error, name_erro
 {
     if (username_error === 1)
     {
-        document.getElementById("username_error").style.visibility="visible";
+        $("#username_error").show();
+        //document.getElementById("username_error").style.visibility="visible";
     }
     if (email_error === 1)
     {
-        document.getElementById("email_error").style.visibility="visible";
+        $("#email_error").show();
+
+        //document.getElementById("email_error").style.visibility="visible";
     }
 
     if (password_error === 1)
     {
-        document.getElementById("pass1_error").style.visibility="visible";
-        document.getElementById("pass2_error").style.visibility="visible";
+        $("#pass1_error").show();
+        $("#pass2_error").show();
+
+        //document.getElementById("pass1_error").style.visibility="visible";
+        //document.getElementById("pass2_error").style.visibility="visible";
     }
 
     if (name_error === 1)
     {
-        document.getElementById("fname_error").style.visibility="visible";
-        document.getElementById("lname_error").style.visibility="visible";
+        $("#fname_error").show();
+        $("#lname_error").show();
+
+        //document.getElementById("fname_error").style.visibility="visible";
+        //document.getElementById("lname_error").style.visibility="visible";
     }
 }
 
 function form_error_clear()
 {
+    $("#username_error").hide();
+    $("#email_error").hide();
+    $("#pass1_error").hide();
+    $("#pass2_error").hide();
+    $("#fname_error").hide();
+    $("#lname_error").hide();
+
+    /*
     document.getElementById("username_error").style.visibility="hidden";
     document.getElementById("email_error").style.visibility="hidden";
     document.getElementById("pass1_error").style.visibility="hidden";
     document.getElementById("pass2_error").style.visibility="hidden";
     document.getElementById("fname_error").style.visibility="hidden";
     document.getElementById("lname_error").style.visibility="hidden";
+    */
 }
