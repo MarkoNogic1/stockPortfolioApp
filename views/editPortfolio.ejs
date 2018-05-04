@@ -88,41 +88,56 @@
                                     <form role="form" id="addStockForm" action="/addstock" method="POST">
 
                                         <div class="form-group">
-
                                             <label>Stock to Add</label>
                                             <div class="panel panel-danger">
-                                                <div class="panel-heading" id="stock_error" style="visibility: hidden;">Stock Name must be valid</div>
+                                                <div class="panel-heading" id="stock_error" style="display: none;">Stock Name must be valid</div>
                                                 <div class="panel-body">
                                                     <div class="form-group input-group">
                                                         <input type="text" class="form-control" name="StockName" id="StockName" size="15">
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                         </div>
+
 
                                         <div class="form-group">
                                             <label>Amount of Shares</label>
-                                            <div class="form-group input-group">
-                                                <input class="form-control" name="ShareNumber" id="ShareNumber" size="15">
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading" id="shares_error" style="display: none;">Must be a number</div>
+                                                <div class="panel-body">
+                                                    <div class="form-group input-group">
+                                                        <input class="form-control" name="ShareNumber" id="ShareNumber" size="15">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Specify a Sector</label>
-                                            <div class="form-group input-group">
-                                                <input list="SectorName" id="SectorNameList" name="SectorName" size="15" class="form-control">
-                                                <datalist id="SectorName" ></datalist>
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading" id="sector_error" style="display: none;">Error</div>
+                                                <div class="panel-body">
+                                                    <div class="form-group input-group">
+                                                        <input list="SectorName" id="SectorNameList" name="SectorName" size="15" class="form-control">
+                                                        <datalist id="SectorName" ></datalist>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
+
                                         <div class="form-group">
                                             <label>Date of Acquisition</label>
-                                            <div class="form-group input-group">
-                                                <input type="date" class="form-control" name="DateAquired" id="DateAquired" size="15">
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading" id="date_error" style="display: none;">Must be Valid Date</div>
+                                                <div class="panel-body">
+                                                    <div class="form-group input-group">
+                                                        <input type="date" class="form-control" name="DateAquired" id="DateAquired" size="15">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
 
                                         <div class="form-group">
                                             <input class="form-control" name="StockValue" id="StockValue" type="hidden" value="0" size="15">
